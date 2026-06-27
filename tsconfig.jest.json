@@ -1,0 +1,21 @@
+{
+  "extends": "./tsconfig.app.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "isolatedModules": false,
+    "verbatimModuleSyntax": false,
+    "allowImportingTsExtensions": false,
+    "esModuleInterop": true,
+    "baseUrl": ".",
+    "paths": {
+      "@shared/config/env": ["test/mocks/env.ts"],
+      "@/*": ["src/*"],
+      "@app/*": ["src/app/*"],
+      "@features/*": ["src/features/*"],
+      "@integrations/*": ["src/integrations/*"],
+      "@shared/*": ["src/shared/*"]
+    }
+  },
+  "include": ["src", "test"],
+  "exclude": ["src/shared/config/env.ts"]
+}
