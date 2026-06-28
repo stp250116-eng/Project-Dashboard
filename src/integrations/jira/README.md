@@ -48,6 +48,18 @@ Defect field mapping:
 | Developer  | `assignee.displayName` (fallback `Unassigned`)                 |
 | Release    | parsed from `fixVersions[].name` (`v<major>.<minor>…`, e.g. `v26.2.2`), else `No Release` |
 
+## Overdue Filter (GET OVER DUE ITEM)
+
+The overdue point dashboard consumes the saved Jira filter **[OO] - GET OVER DUE ITEM**
+(id `13525`) and maps overdue records to a developer-centric analytics model.
+
+| Field               | Source |
+| ------------------- | ------ |
+| Developer           | `assignee.displayName` |
+| Parent Issue ID     | `parent.key` |
+| Parent Issue Summary| `parent.fields.summary` |
+| Release Version     | `fixVersions[0].name` |
+
 ## Environment Variables
 
 | Variable                | Purpose                                       |

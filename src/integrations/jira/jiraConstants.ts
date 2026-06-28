@@ -45,6 +45,16 @@ export const JIRA_TRAINING_FIELDS = {
   vendorType: 'customfield_11547',
 } as const;
 
+export const JIRA_OVERDUE_FILTER = {
+  id: 13525,
+  name: '[OO] - GET OVER DUE ITEM',
+} as const;
+
+export const JIRA_OVERDUE_FIELDS = {
+  parent: 'parent',
+  fixVersions: 'fixVersions',
+} as const;
+
 /**
  * Custom field IDs used by the OO project's defect records. Centralized here so
  * a field re-map is a single-line change. Discovered via `/rest/api/3/field`.
@@ -78,6 +88,7 @@ export const JIRA_QUERY_KEYS = {
   sprints: (boardId: number) => ['jira', 'sprints', boardId] as const,
   releases: (projectKey: string) => ['jira', 'releases', projectKey] as const,
   defects: (filterId: string | number) => ['jira', 'defects', filterId] as const,
+  overdueIssues: (filterId: string | number) => ['jira', 'overdue', filterId] as const,
 } as const;
 
 export const JIRA_DEFAULT_MAX_RESULTS = 50;

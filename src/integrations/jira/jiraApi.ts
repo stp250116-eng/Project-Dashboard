@@ -5,6 +5,7 @@ import {
   JIRA_DEFAULT_MAX_RESULTS,
   JIRA_DEFECT_FILTER,
   JIRA_DEFECT_REQUEST_FIELDS,
+  JIRA_OVERDUE_FILTER,
   JIRA_TRAINING_FILTER,
 } from './jiraConstants';
 import type {
@@ -13,6 +14,7 @@ import type {
   JiraSprint,
   JiraDefect,
   RawDeveloperTrainingIssue,
+  RawJiraIssue,
   RawJiraSearchResponse,
 } from './jiraTypes';
 import { mapJiraIssues, mapJiraDefects } from './jiraMapper';
@@ -95,6 +97,26 @@ export const jiraApi = {
           },
         },
       );
+      records.push(...data.issues);
+      nextPageToken = data.isLast ? undefined : data.nextPageToken;
+    } while (nextPageToken);
+
+    return records;
+  },
+
+  async getOverdueIssues(pageSize = 100): Promise<RawJiraIssue[]> {
+    const records: RawJiraIssue[] = [];
+    let nextPageToken: string | undefined;
+
+    do {
+      const { data } = await jiraClient.get<RawJiraSearchResponse>(JIRA_ENDPOINTS.search, {
+        params: {
+          jql: `filter = ${JIRA_OVERDUE_FILTER.id}`,
+          maxResults: pageSize,
+          fields: 'assignee,parent,fixVersions',
+          ...(nextPageToken ? { nextPageToken } : {}),
+        },
+      });
       records.push(...data.issues);
       nextPageToken = data.isLast ? undefined : data.nextPageToken;
     } while (nextPageToken);

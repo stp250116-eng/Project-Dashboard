@@ -78,6 +78,7 @@ export interface RawJiraIssue {
     issuetype: { name: string };
     created: string;
     updated: string;
+    parent?: { id: string; key: string; fields: { summary: string } } | null;
     fixVersions?: Array<{ id: string; name: string }> | null;
     [customField: string]: unknown;
   };

@@ -19,6 +19,9 @@ const TeamCapacityPage = lazy(() => import('@features/team-capacity/pages/TeamCa
 const DeveloperTrainingDashboardPage = lazy(
   () => import('@features/developer-training-dashboard/pages/DeveloperTrainingDashboardPage'),
 );
+const OverduePointDashboardPage = lazy(
+  () => import('@features/overdue-point-dashboard/pages/OverduePointDashboardPage'),
+);
 const ReportsPage = lazy(() => import('@features/reports/pages/ReportsPage'));
 
 const withSuspense = (node: JSX.Element): JSX.Element => (
@@ -38,6 +41,7 @@ const routes: RouteObject[] = [
       { path: ROUTES.defectDashboard, element: withSuspense(<DefectDashboardPage />) },
       { path: ROUTES.complexityPoint, element: withSuspense(<ComplexityPointPage />) },
       { path: ROUTES.developerTrainingDashboard, element: withSuspense(<DeveloperTrainingDashboardPage />) },
+      { path: ROUTES.overduePointDashboard, element: withSuspense(<OverduePointDashboardPage />) },
       { path: ROUTES.teamCapacity, element: withSuspense(<TeamCapacityPage />) },
       { path: ROUTES.reports, element: withSuspense(<ReportsPage />) },
       { path: '*', element: <Navigate to={ROUTES.dashboard} replace /> },
