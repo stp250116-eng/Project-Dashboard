@@ -20,6 +20,12 @@ describe('KpiCard', () => {
     expect(screen.getByText(/pts/)).toBeInTheDocument();
   });
 
+  it('renders the value and unit on separate lines', () => {
+    render(<KpiCard metric={{ id: 'k', label: 'Most Popular Training Type', value: 'Online/Self-Learning', unit: '103.32 hrs' }} />);
+    expect(screen.getByText('Online/Self-Learning')).toBeInTheDocument();
+    expect(screen.getByText('103.32 hrs')).toBeInTheDocument();
+  });
+
   it('applies the wide variant class when wide is set', () => {
     render(
       <KpiCard metric={{ id: 'k', label: 'Top Defect Developer', value: 'Wasapon' }} wide />,

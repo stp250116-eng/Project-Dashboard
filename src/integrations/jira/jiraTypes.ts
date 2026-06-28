@@ -83,14 +83,25 @@ export interface RawJiraIssue {
   };
 }
 
+export interface RawDeveloperTrainingFieldSet {
+  aggregatetimespent: number | null;
+  customfield_11546: string | { value: string } | null;
+  customfield_11547: string | { value: string } | null;
+  [customField: string]: unknown;
+}
+
+export interface RawDeveloperTrainingIssue extends RawJiraIssue {
+  fields: RawJiraIssue['fields'] & RawDeveloperTrainingFieldSet;
+}
+
 /** A Jira single-select custom field value (`{ value: '…' }`). */
 export interface RawJiraOption {
   value: string;
   id?: string;
 }
 
-export interface RawJiraSearchResponse {
-  issues: RawJiraIssue[];
+export interface RawJiraSearchResponse<IssueType = RawJiraIssue> {
+  issues: IssueType[];
   /** Opaque cursor for the next page; absent on the final page. */
   nextPageToken?: string;
   /** True when this is the last page (enhanced search endpoint). */

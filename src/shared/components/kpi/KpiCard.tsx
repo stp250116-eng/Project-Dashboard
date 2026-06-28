@@ -18,16 +18,22 @@ export const KpiCard = ({ metric, wide = false }: KpiCardProps): JSX.Element => 
 
   return (
     <article className={`kpi-card${wide ? ' kpi-card--wide' : ''}`} aria-label={label}>
-      <header className="kpi-card__label">{label}</header>
-      <div className="kpi-card__value">
-        {value}
-        {unit ? <span className="kpi-card__unit"> {unit}</span> : null}
+      <div className="kpi-card__header">
+        <span className="kpi-card__label">{label}</span>
       </div>
-      {trend && typeof delta === 'number' ? (
-        <footer className={`kpi-card__trend kpi-card__trend--${trend}`}>
-          <span aria-hidden="true">{trendSymbol[trend]}</span> {Math.abs(delta)}%
-        </footer>
-      ) : null}
+
+      <div className="kpi-card__body">
+        <div className="kpi-card__value">
+          <span className="kpi-card__primary">{value}</span>
+          {unit ? <span className="kpi-card__unit">{unit}</span> : null}
+        </div>
+
+        {trend && typeof delta === 'number' ? (
+          <footer className={`kpi-card__trend kpi-card__trend--${trend}`}>
+            <span aria-hidden="true">{trendSymbol[trend]}</span> {Math.abs(delta)}%
+          </footer>
+        ) : null}
+      </div>
     </article>
   );
 };

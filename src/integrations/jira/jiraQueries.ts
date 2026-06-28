@@ -1,7 +1,7 @@
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 import { jiraApi } from './jiraApi';
 import { JIRA_QUERY_KEYS, JIRA_DEFECT_FILTER } from './jiraConstants';
-import type { JiraBoard, JiraIssue, JiraSprint, JiraDefect } from './jiraTypes';
+import type { JiraBoard, JiraIssue, JiraSprint, JiraDefect, RawJiraSearchResponse } from './jiraTypes';
 
 /** React Query hook for JQL-based issue search. */
 export const useJiraIssues = (jql: string, enabled = true): UseQueryResult<JiraIssue[]> =>
@@ -41,6 +41,14 @@ export const useJiraDefects = (
   useQuery({
     queryKey: JIRA_QUERY_KEYS.defects(filterId),
     queryFn: () => jiraApi.getDefects(filterId),
+    enabled,
+    staleTime: 60_000,
+  });
+
+export const useJiraTrainingInformation = (enabled = true): UseQueryResult<RawJiraSearchResponse['issues']> =>
+  useQuery({
+    queryKey: ['jira', 'training-information'],
+    queryFn: () => jiraApi.getTrainingInformation(),
     enabled,
     staleTime: 60_000,
   });

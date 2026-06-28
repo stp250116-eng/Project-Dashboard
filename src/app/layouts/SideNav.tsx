@@ -13,6 +13,7 @@ const NAV_ITEMS: readonly NavItem[] = [
   { to: ROUTES.releaseDashboard, label: 'Release Dashboard' },
   { to: ROUTES.defectDashboard, label: 'Defect Dashboard' },
   { to: ROUTES.complexityPoint, label: 'Complexity Point' },
+  { to: ROUTES.developerTrainingDashboard, label: 'Developer Training Dashboard' },
   { to: ROUTES.teamCapacity, label: 'Team Capacity' },
   { to: ROUTES.reports, label: 'Reports' },
 ];

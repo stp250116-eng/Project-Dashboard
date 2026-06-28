@@ -35,6 +35,16 @@ export const JIRA_COMPLEXITY_FILTER = {
   jql: `project = "Ocean Team Ocean Online" and issuetype = Task and "Team[Team]" = ee9c42a6-7384-43eb-9092-670f4585a710 and "Activity[Dropdown]" != Grooming and "Activity[Dropdown]" != "Support and Documentation" and "Complexity[Dropdown]" IS NOT EMPTY and createdDate >= startOfYear() and createdDate <= endOfYear() and status = 'Done' order by assignee asc`,
 } as const;
 
+export const JIRA_TRAINING_FILTER = {
+  id: 12947,
+  name: '[OO] - GET TRAINING INFORMATION',
+} as const;
+
+export const JIRA_TRAINING_FIELDS = {
+  trainingType: 'customfield_11546',
+  vendorType: 'customfield_11547',
+} as const;
+
 /**
  * Custom field IDs used by the OO project's defect records. Centralized here so
  * a field re-map is a single-line change. Discovered via `/rest/api/3/field`.

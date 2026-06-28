@@ -1,5 +1,5 @@
 export { jiraApi } from './jiraApi';
-export { useJiraIssues, useJiraBoards, useJiraSprints, useJiraDefects } from './jiraQueries';
+export { useJiraIssues, useJiraBoards, useJiraSprints, useJiraDefects, useJiraTrainingInformation } from './jiraQueries';
 export {
   mapJiraIssue,
   mapJiraIssues,
@@ -26,4 +26,5 @@ export type {
   JiraRelease,
   JiraDefect,
   JiraIssueStatusCategory,
+  RawJiraSearchResponse,
 } from './jiraTypes';

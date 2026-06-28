@@ -1,6 +1,6 @@
 import { createApiClient } from '@shared/api';
 import { appConfig } from '@shared/constants/appConfig';
-import { JIRA_COMPLEXITY_FILTER, JIRA_ENDPOINTS, JIRA_DEFAULT_MAX_RESULTS } from '@integrations/jira/jiraConstants';
+import { JIRA_COMPLEXITY_FILTER, JIRA_ENDPOINTS } from '@integrations/jira/jiraConstants';
 import type { RawJiraIssue, RawJiraSearchResponse } from '@integrations/jira/jiraTypes';
 import type { ComplexityRecord } from '../models/complexityModels';
 import { getComplexityValueFromFields } from '../services/complexityAnalytics';

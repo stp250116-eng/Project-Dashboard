@@ -5,12 +5,14 @@ import {
   JIRA_DEFAULT_MAX_RESULTS,
   JIRA_DEFECT_FILTER,
   JIRA_DEFECT_REQUEST_FIELDS,
+  JIRA_TRAINING_FILTER,
 } from './jiraConstants';
 import type {
   JiraIssue,
   JiraBoard,
   JiraSprint,
   JiraDefect,
+  RawDeveloperTrainingIssue,
   RawJiraSearchResponse,
 } from './jiraTypes';
 import { mapJiraIssues, mapJiraDefects } from './jiraMapper';
@@ -75,5 +77,28 @@ export const jiraApi = {
     } while (nextPageToken);
 
     return defects;
+  },
+
+  async getTrainingInformation(pageSize = 100): Promise<RawDeveloperTrainingIssue[]> {
+    const records: RawDeveloperTrainingIssue[] = [];
+    let nextPageToken: string | undefined;
+
+    do {
+      const { data } = await jiraClient.get<RawJiraSearchResponse<RawDeveloperTrainingIssue>>(
+        JIRA_ENDPOINTS.search,
+        {
+          params: {
+            jql: `filter = ${JIRA_TRAINING_FILTER.id}`,
+            maxResults: pageSize,
+            fields: 'assignee,aggregatetimespent,customfield_11546,customfield_11547',
+            ...(nextPageToken ? { nextPageToken } : {}),
+          },
+        },
+      );
+      records.push(...data.issues);
+      nextPageToken = data.isLast ? undefined : data.nextPageToken;
+    } while (nextPageToken);
+
+    return records;
   },
 };

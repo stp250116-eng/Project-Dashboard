@@ -6,6 +6,7 @@ export const ROUTES = {
   releaseDashboard: '/release-dashboard',
   defectDashboard: '/defect-dashboard',
   complexityPoint: '/complexity-point',
+  developerTrainingDashboard: '/developer-training-dashboard',
   teamCapacity: '/team-capacity',
   reports: '/reports',
 } as const;

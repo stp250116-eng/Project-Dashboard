@@ -12,7 +12,7 @@ describe('SideNav', () => {
     expect(screen.getByRole('navigation', { name: 'Primary' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Dashboard' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Reports' })).toBeInTheDocument();
-    expect(screen.getAllByRole('link')).toHaveLength(8);
+    expect(screen.getAllByRole('link')).toHaveLength(9);
   });
 
   it('marks the link for the active route and leaves the others inactive', () => {
