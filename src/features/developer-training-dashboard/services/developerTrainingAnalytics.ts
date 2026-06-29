@@ -12,6 +12,19 @@ const distinctSorted = (values: readonly string[]): string[] =>
 
 const toHours = (seconds: number): number => Number((seconds / 3600).toFixed(2));
 
+export const formatTrainingHours = (hours: number): string => {
+  const wholeHours = Math.floor(hours);
+  const minutes = Math.round((hours - wholeHours) * 60);
+
+  if (minutes === 60) {
+    return `${wholeHours + 1}h`;
+  }
+
+  return minutes === 0 ? `${wholeHours}h` : `${wholeHours}h ${minutes}m`;
+};
+
+export const formatTrainingDuration = (seconds: number): string => formatTrainingHours(seconds / 3600);
+
 export const collectFilterOptions = (
   records: readonly DeveloperTrainingRecord[],
 ): DeveloperTrainingFilterOptions => ({
@@ -78,7 +91,7 @@ const topMetric = (
     id: label.toLowerCase().replace(/\s+/g, '-'),
     label,
     value: winner,
-    unit: winner === '—' ? undefined : `${toHours(topSeconds)} hrs`,
+    unit: winner === '—' ? undefined : formatTrainingDuration(topSeconds),
   };
 };
 
@@ -100,7 +113,12 @@ export const buildDeveloperTrainingSummary = (
       {
         id: 'total-team-hours',
         label: 'Total Training Hours',
-        value: filtered.length === 0 ? 0 : toHours(Array.from(developerTotals.values()).reduce((sum, secs) => sum + secs, 0)),
+        value:
+          filtered.length === 0
+            ? '0h'
+            : formatTrainingDuration(
+                Array.from(developerTotals.values()).reduce((sum, secs) => sum + secs, 0),
+              ),
       },
     ],
     trainingTypeDistribution: toChartPoints(trainingTypeTotals),
