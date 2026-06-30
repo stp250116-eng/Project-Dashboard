@@ -52,4 +52,5 @@ Live overdue delivery analytics sourced from Jira filter **[OO] - GET OVER DUE I
 ## Testing
 
 - Unit tests for analytics and filters.
+- Hook-level tests cover the empty-state and mapped-data branches for the dashboard hook.
 - Page-level tests for loading, empty, and error states.

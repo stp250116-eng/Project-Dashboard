@@ -1,6 +1,7 @@
 import type { AxiosInstance, InternalAxiosRequestConfig, AxiosResponse } from 'axios';
 import { apiErrorHandler } from './apiErrorHandler';
 import { LoggerService } from '@shared/services/logger';
+import { generateUUIDv4 } from '@shared/utils/uuid';
 
 /**
  * Registers request/response interceptors on an Axios instance:
@@ -14,7 +15,11 @@ export const registerInterceptors = (client: AxiosInstance): void => {
       if (token) {
         config.headers.set('Authorization', `Bearer ${token}`);
       }
-      config.headers.set('X-Correlation-Id', crypto.randomUUID());
+      const correlationId =
+        typeof crypto !== 'undefined' && typeof (crypto as any).randomUUID === 'function'
+          ? (crypto as any).randomUUID()
+          : generateUUIDv4();
+      config.headers.set('X-Correlation-Id', correlationId);
       return config;
     },
     (error) => Promise.reject(apiErrorHandler(error)),

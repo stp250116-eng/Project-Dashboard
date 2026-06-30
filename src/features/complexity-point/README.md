@@ -14,8 +14,8 @@ A summary page for complexity points sourced from the Jira saved filter **GET CO
 ## User Flow
 
 1. User navigates to `/complexity-point`.
-2. The page fetches the saved Jira filter results.
-3. The user filters by assignee and the summary table updates immediately.
+2. The page fetches the saved Jira filter results through the feature hook.
+3. The user filters by assignee and the summary table and KPI cards update immediately.
 
 ## Data Source & Field Mapping
 
@@ -23,7 +23,7 @@ A summary page for complexity points sourced from the Jira saved filter **GET CO
 | --- | --- |
 | Complexity set | Saved filter `GET COMPLEXITY BY YEAR` |
 | Developer | `assignee.displayName` |
-| Complexity | `customfield_10016` (story points) |
+| Complexity | `customfield_10704` when present, otherwise the first Jira field whose name matches `complexity` |
 
 ## Filters
 
@@ -31,12 +31,17 @@ A summary page for complexity points sourced from the Jira saved filter **GET CO
 
 ## Validation Rules
 
-- Complexity values are parsed as numbers; invalid/missing values default to `0`.
+- Complexity values are parsed as numbers; invalid, empty, or missing values default to `0`.
+- When no records are present, the page shows the empty-state messaging from the shared `StateView`.
 
 ## Error Handling
 
-The shared `StateView` handles loading, empty, error, and success states.
+The shared `StateView` handles loading, empty, error, and success states. The page shows the same empty/error messaging for the hook result.
 
 ## Jest Test Scenarios
 
-- `complexityAnalytics.test.ts` — aggregation, sorting, and assignee filtering.
+- `complexityAnalytics.test.ts` — aggregation, sorting, filtering, and fallback parsing rules.
+- `ComplexityPointPage.test.tsx` — rendering of the summary view and the empty state.
+- `ComplexityFilters.test.tsx` — developer filter selection flow.
+- `complexityApi.test.ts` — Jira API paging and mapping behavior.
+- `useComplexityPoints.test.tsx` — hook loading, empty, and error-state behavior.

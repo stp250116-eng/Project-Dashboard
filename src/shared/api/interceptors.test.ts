@@ -57,6 +57,29 @@ describe('registerInterceptors — request', () => {
     expect(result.headers.get('X-Correlation-Id')).toBeTruthy();
   });
 
+  it('falls back to the UUID helper when randomUUID is unavailable', async () => {
+    const originalRandomUUID = (globalThis.crypto as Crypto & { randomUUID?: () => string }).randomUUID;
+    Object.defineProperty(globalThis.crypto, 'randomUUID', {
+      value: undefined,
+      configurable: true,
+    });
+
+    const instance = makeInstance();
+    const request = getHandlers(
+      (instance.interceptors.request as unknown) as { handlers: InterceptorHandler<unknown>[] },
+    );
+
+    const config = { headers: new AxiosHeaders() };
+    const result = (await request.fulfilled(config)) as typeof config;
+
+    expect(result.headers.get('X-Correlation-Id')).toMatch(/^[0-9a-f-]{8,}$/i);
+
+    Object.defineProperty(globalThis.crypto, 'randomUUID', {
+      value: originalRandomUUID,
+      configurable: true,
+    });
+  });
+
   it('treats sessionStorage failures as an absent token', async () => {
     jest.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
       throw new Error('blocked');

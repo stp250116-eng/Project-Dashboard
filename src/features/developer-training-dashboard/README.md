@@ -52,5 +52,6 @@ Live developer training analytics sourced from Jira filter **[OO] - GET TRAINING
 
 ## Testing
 
-- Unit tests for the page states and mapping logic.
-- Hook/analytics tests should cover aggregation, filtering, and chart payloads.
+- Unit tests cover the analytics formatter, summary builder, and mapper normalization paths.
+- The mapper suite verifies fallback behavior for missing assignees, blank text, invalid option values, and non-numeric time values.
+- Hook/analytics tests cover aggregation, filtering, and chart payloads.

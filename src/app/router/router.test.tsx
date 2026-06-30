@@ -22,6 +22,12 @@ jest.mock('@features/defect-dashboard/pages/DefectDashboardPage', () =>
 jest.mock('@features/complexity-point/pages/ComplexityPointPage', () =>
   pageMock('Complexity Point'),
 );
+jest.mock('@features/developer-training-dashboard/pages/DeveloperTrainingDashboardPage', () =>
+  pageMock('Developer Training Dashboard'),
+);
+jest.mock('@features/overdue-point-dashboard/pages/OverduePointDashboardPage', () =>
+  pageMock('Overdue Point Dashboard'),
+);
 jest.mock('@features/team-capacity/pages/TeamCapacityPage', () => pageMock('Team Capacity'));
 jest.mock('@features/reports/pages/ReportsPage', () => pageMock('Reports'));
 
@@ -49,6 +55,8 @@ describe('router', () => {
       ['/release-dashboard', 'Release Dashboard'],
       ['/defect-dashboard', 'Defect Dashboard'],
       ['/complexity-point', 'Complexity Point'],
+      ['/developer-training-dashboard', 'Developer Training Dashboard'],
+      ['/overdue-point-dashboard', 'Overdue Point Dashboard'],
       ['/team-capacity', 'Team Capacity'],
       ['/reports', 'Reports'],
     ];
