@@ -9,6 +9,7 @@ import { Card, CardBody, CardHeader } from '@progress/kendo-react-layout';
 import { ProgressBar } from '@progress/kendo-react-progressbars';
 import { Chip } from '@progress/kendo-react-buttons';
 import { getGoalLabel, getGoalDefinition } from '../services/goalDefinitions';
+import { LOW_DEFECT_TOOLTIP, HIGH_DEFECT_TOOLTIP } from '../constants/defectTooltips';
 import { formatTrainingDuration } from '@features/developer-training-dashboard/services/developerTrainingAnalytics';
 import type { DeveloperGoalData } from '../../models/goalModels';
 
@@ -159,8 +160,26 @@ export const DeveloperGoalCard: React.FC<DeveloperGoalCardProps> = ({
                   border: `1px solid var(--color-border, #e0e0e0)`,
                 }}
               >
-                <div style={{ fontSize: '11px', fontWeight: '600', marginBottom: '4px', color: 'var(--color-text-primary, #333)' }}>
-                  {getGoalLabel(goal.type)}
+                <div style={{ fontSize: '11px', fontWeight: '600', marginBottom: '4px', color: 'var(--color-text-primary, #333)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span>{getGoalLabel(goal.type)}</span>
+                  {(goal.type === 'defectLow') && (
+                    <span
+                      title={LOW_DEFECT_TOOLTIP}
+                      aria-label="Low level defect rate details"
+                      style={{ fontSize: '11px', color: 'var(--color-text-secondary, #666)', cursor: 'help' }}
+                    >
+                      ⓘ
+                    </span>
+                  )}
+                  {(goal.type === 'defectHigh') && (
+                    <span
+                      title={HIGH_DEFECT_TOOLTIP}
+                      aria-label="High level defect rate details"
+                      style={{ fontSize: '11px', color: 'var(--color-text-secondary, #666)', cursor: 'help' }}
+                    >
+                      ⓘ
+                    </span>
+                  )}
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>

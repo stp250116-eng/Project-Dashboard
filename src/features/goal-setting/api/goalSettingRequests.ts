@@ -205,21 +205,24 @@ export async function fetchGoalSettingData(year: number): Promise<DeveloperGoalD
           type: 'training',
           actual: trainingHours,
           target: GOAL_DEFINITIONS.training.target,
-          status: calculateGoalStatus('must-reach', trainingHours, GOAL_DEFINITIONS.training.target!),
+          // Pass the goal id so scoring logic can apply training-specific rules
+          status: calculateGoalStatus('must-reach', trainingHours, GOAL_DEFINITIONS.training.target!, 'training'),
           subScore: calculateSubScore('must-reach', trainingHours, GOAL_DEFINITIONS.training.target!),
         },
         defectLow: {
           type: 'defectLow',
           actual: defectLowPercent,
           threshold: GOAL_DEFINITIONS.defectLow.threshold,
-          status: calculateGoalStatus('must-not-exceed', defectLowPercent, GOAL_DEFINITIONS.defectLow.threshold!),
+          // Pass goal id so scoring applies Low-Level Defect Rate bespoke bands
+          status: calculateGoalStatus('must-not-exceed', defectLowPercent, GOAL_DEFINITIONS.defectLow.threshold!, 'defectLow'),
           subScore: calculateSubScore('must-not-exceed', defectLowPercent, GOAL_DEFINITIONS.defectLow.threshold!),
         },
         defectHigh: {
           type: 'defectHigh',
           actual: defectHighPercent,
           threshold: GOAL_DEFINITIONS.defectHigh.threshold,
-          status: calculateGoalStatus('must-not-exceed', defectHighPercent, GOAL_DEFINITIONS.defectHigh.threshold!),
+          // Pass goal id so scoring applies High-Level bespoke bands
+          status: calculateGoalStatus('must-not-exceed', defectHighPercent, GOAL_DEFINITIONS.defectHigh.threshold!, 'defectHigh'),
           subScore: calculateSubScore('must-not-exceed', defectHighPercent, GOAL_DEFINITIONS.defectHigh.threshold!),
         },
         complexity: {

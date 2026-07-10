@@ -18,16 +18,54 @@ export function calculateGoalStatus(
   goalType: 'must-reach' | 'must-not-exceed',
   actual: number,
   targetOrThreshold: number,
+  // Optional identifier for goal-specific rule overrides (e.g. 'training')
+  goalId?: string,
 ): GoalStatus {
   if (targetOrThreshold <= 0) return 'off-track';
 
   if (goalType === 'must-reach') {
+    // Special-case: training goal has bespoke boundaries defined by product.
+    if (goalId === 'training') {
+      // Training thresholds:
+      // - on-track: actual >= 0.75 * target
+      // - at-risk: actual >= 0.41 * target
+      // - off-track: actual <= 0.40 * target
+      if (actual >= targetOrThreshold * 0.75) return 'on-track';
+      if (actual >= targetOrThreshold * 0.41) return 'at-risk';
+      return 'off-track';
+    }
+
+    // Default must-reach behavior (used by complexity and others)
     if (actual >= targetOrThreshold * 0.9) return 'on-track';
     if (actual >= targetOrThreshold * 0.7) return 'at-risk';
     return 'off-track';
   }
 
   // must-not-exceed
+  // Special-case: Low-Level Defect Rate uses bespoke boundaries (percentages)
+    if (goalId === 'defectLow') {
+      // Special-case Low-Level Defect Rate with product-defined bands:
+      // - on-track: defectRate% <= 5%
+      // - at-risk: defectRate% > 5% and <= 8%
+      // - off-track: defectRate% > 8% (>=9% considered off-track in product guidance)
+      if (actual <= 5) return 'on-track';
+      if (actual > 5 && actual <= 8) return 'at-risk';
+      return 'off-track';
+  }
+  
+    // Special-case: High-Level Defect Rate bespoke bands
+    if (goalId === 'defectHigh') {
+      // Product rule:
+      // - Passing threshold: 5%
+      // - on-track: defectRate% < 3%
+      // - at-risk: defectRate% >= 3% and <= 5%
+      // - off-track: defectRate% > 5%
+      if (actual < 3) return 'on-track';
+      if (actual >= 3 && actual <= 5) return 'at-risk';
+      return 'off-track';
+    }
+
+  // Default must-not-exceed behavior
   if (actual <= targetOrThreshold) return 'on-track';
   if (actual <= targetOrThreshold * 1.5) return 'at-risk';
   return 'off-track';

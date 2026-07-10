@@ -22,15 +22,38 @@ Each goal has an associated:
 
 ### Goal Status Logic
 
-**Must-Reach Goals** (Training, Complexity):
+**Must-Reach Goals** (Complexity):
 - `on-track`: actual ≥ target × 0.9 (90% of target)
 - `at-risk`: actual ≥ target × 0.7 (70% of target)
 - `off-track`: actual < target × 0.7
+
+**Training (hours)** — bespoke boundaries:
+- `on-track`: actual ≥ target × 0.75 (75% of target)
+- `at-risk`: actual ≥ target × 0.41 (41% of target)
+- `off-track`: actual ≤ target × 0.40 (40% of target)
+
+Note: Training uses a looser on-track threshold and a finer at-risk cutoff to provide earlier remediation signals for upskilling progress.
 
 **Must-Not-Exceed Goals** (Defects, Overdue):
 - `on-track`: actual ≤ threshold
 - `at-risk`: actual > threshold AND ≤ threshold × 1.5
 - `off-track`: actual > threshold × 1.5
+
+**Low-Level Defect Rate (bespoke bands)**
+- Passing threshold: 8% (developer must not exceed 8% to pass)
+- `on-track`: defectRate% ≤ 5%
+- `at-risk`: defectRate% > 5% AND ≤ 8%
+- `off-track`: defectRate% > 8% (>=9% considered off-track)
+
+These bands are enforced as a special-case for the Low-Level Defect Rate goal to provide clearer remediation guidance.
+
+**High-Level Defect Rate (bespoke bands)**
+- Passing threshold: 5% (developer must not exceed 5% to pass)
+- `on-track`: defectRate% < 3%
+- `at-risk`: defectRate% ≥ 3% AND ≤ 5%
+- `off-track`: defectRate% > 5%
+
+These bands are enforced as a special-case for the High-Level Defect Rate goal to provide tighter control over critical/high severity defects.
 
 ### Score Calculation
 
