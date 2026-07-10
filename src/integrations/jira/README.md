@@ -90,3 +90,49 @@ The same `jiraApi` surface can be backed by the Jira MCP server. Point
   story points, null assignees) and defect mapping (release parsing, severity
   normalization, root-cause normalization, null handling, collection mapping).
 - Query hooks are covered indirectly through feature hook tests using MSW.
+
+## How to test saved filters locally (dev server)
+
+During development the Vite dev server proxies same-origin `/jira/*` requests
+to the Jira Cloud instance configured via `VITE_JIRA_BASE_URL` and injects the
+`Authorization` header using `JIRA_EMAIL` + `JIRA_API_TOKEN` from the local
+environment. Use the following examples to validate saved filters used by the
+dashboard.
+
+Replace `5178` with the dev server port if different (check the terminal
+output when the dev server starts).
+
+Example: fetch one issue from the `GET ALM DEFECT` saved filter (id `11471`):
+
+```
+curl -i "http://localhost:5178/jira/rest/api/3/search/jql?jql=filter%3D11471&maxResults=1"
+```
+
+Example: fetch training issues (filter id `12947`):
+
+```
+curl -i "http://localhost:5178/jira/rest/api/3/search/jql?jql=filter%3D12947&maxResults=5"
+```
+
+If the proxy and credentials are configured correctly you should receive a
+`200 OK` JSON response containing an `issues` array. Common responses:
+
+- `200 OK` — success, response body contains issues
+- `401/403` — authentication/permission issue (check `JIRA_EMAIL` + `JIRA_API_TOKEN`)
+- `410 Gone` — wrong endpoint; the dashboard uses `/rest/api/3/search/jql` with a
+   `jql` query parameter (e.g. `filter = 11471`).
+
+If you see network errors like `ERR_CONNECTION_REFUSED` the application may be
+trying to call the backend API base (`VITE_API_BASE_URL`) instead of the Jira
+proxy path — make sure code calls go through the Jira client or use the
+`/jira` prefix in requests.
+
+Saved filter IDs referenced by the Goal Setting feature:
+
+| Goal | Filter ID |
+|------|-----------|
+| Training | 12947 |
+| Defects (Low/High) | 11471 |
+| Complexity | 13492 |
+| Overdue | 13525 |
+

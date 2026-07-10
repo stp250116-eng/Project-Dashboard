@@ -4,9 +4,17 @@
   --color-border: #e1e4e8;
   --color-primary: #0052cc;
   --color-text: #172b4d;
+  --color-text-primary: #172b4d;
+  --color-text-secondary: #626f86;
   --color-muted: #6b778c;
   --color-success: #36b37e;
   --color-danger: #de350b;
+  --color-error: #f44336;
+  --color-error-bg: #ffebee;
+  --color-warning: #ffa500;
+  --color-warning-bg: #fff3e0;
+  --color-info: #0052cc;
+  --color-info-bg: #e7f1ff;
   --sidenav-width: 240px;
   --header-height: 56px;
   --footer-height: 40px;

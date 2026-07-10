@@ -9,6 +9,7 @@ export const ROUTES = {
   developerTrainingDashboard: '/developer-training-dashboard',
   overduePointDashboard: '/overdue-point-dashboard',
   teamCapacity: '/team-capacity',
+  goalSetting: '/goal-setting',
   reports: '/reports',
 } as const;
 

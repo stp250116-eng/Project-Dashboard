@@ -16,6 +16,7 @@ const NAV_ITEMS: readonly NavItem[] = [
   { to: ROUTES.developerTrainingDashboard, label: 'Developer Training Dashboard' },
   { to: ROUTES.overduePointDashboard, label: 'Overdue Point Dashboard' },
   { to: ROUTES.teamCapacity, label: 'Team Capacity' },
+  { to: ROUTES.goalSetting, label: 'Goal Setting' },
   { to: ROUTES.reports, label: 'Reports' },
 ];
 

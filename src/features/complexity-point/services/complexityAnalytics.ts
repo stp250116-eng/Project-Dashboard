@@ -18,7 +18,7 @@ export const parseComplexityValue = (value: unknown): number => {
 };
 
 export const getComplexityValueFromFields = (fields: Record<string, unknown>): number => {
-  const explicit = fields.customfield_10704;
+  const explicit = fields.customfield_10704 ?? fields.customfield_11530;
   if (explicit !== undefined) {
     const parsed = parseComplexityValue(explicit);
     if (parsed > 0) {

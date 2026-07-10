@@ -5,8 +5,6 @@ import type { RawJiraIssue, RawJiraSearchResponse } from '@integrations/jira/jir
 import type { ComplexityRecord } from '../models/complexityModels';
 import { getComplexityValueFromFields } from '../services/complexityAnalytics';
 
-const jiraClient = createApiClient(appConfig.jiraApiBase);
-
 const mapComplexityIssue = (issue: RawJiraIssue): ComplexityRecord => ({
   assignee: issue.fields.assignee?.displayName ?? 'Unassigned',
   complexity: getComplexityValueFromFields(issue.fields as Record<string, unknown>),
@@ -14,6 +12,7 @@ const mapComplexityIssue = (issue: RawJiraIssue): ComplexityRecord => ({
 
 export const complexityApi = {
   async getComplexityPoints(): Promise<ComplexityRecord[]> {
+    const jiraClient = createApiClient(appConfig.jiraApiBase);
     const records: ComplexityRecord[] = [];
     let nextPageToken: string | undefined;
 
@@ -22,7 +21,9 @@ export const complexityApi = {
         params: {
           jql: JIRA_COMPLEXITY_FILTER.jql,
           maxResults: 100,
-          fields: 'summary,assignee,customfield_10704',
+          // Request both known candidate fields so the canonical parser can
+          // extract complexity regardless of field id used in the Jira filter.
+          fields: 'summary,assignee,customfield_10704,customfield_11530',
           ...(nextPageToken ? { nextPageToken } : {}),
         },
       });

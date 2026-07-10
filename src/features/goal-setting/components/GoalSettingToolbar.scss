@@ -1,0 +1,108 @@
+/**
+ * Styles for GoalSettingToolbar component
+ */
+
+.goal-setting-toolbar {
+  display: flex;
+  gap: 2rem;
+  padding: 1.5rem;
+  background-color: var(--color-neutral-50, #fafbfc);
+  border-radius: 8px;
+  border: 1px solid var(--color-neutral-200, #f1f2f4);
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  align-items: flex-end;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .toolbar-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    min-width: 200px;
+
+    @media (max-width: 768px) {
+      width: 100%;
+    }
+  }
+
+  .toolbar-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-text-primary, #172b4d);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .year-selector {
+    width: 100%;
+    max-width: 250px;
+
+    @media (max-width: 768px) {
+      max-width: 100%;
+    }
+  }
+
+  .search-input {
+    width: 100%;
+    max-width: 300px;
+
+    @media (max-width: 768px) {
+      max-width: 100%;
+    }
+
+    input {
+      padding: 0.75rem;
+      border: 1px solid var(--color-neutral-300, #dfe1e6);
+      border-radius: 4px;
+      font-size: 0.875rem;
+
+      &:focus {
+        border-color: var(--color-info, #0052cc);
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(0, 82, 204, 0.1);
+      }
+    }
+  }
+
+  .k-button-group {
+    display: flex;
+    gap: 0;
+
+    .k-button {
+      padding: 0.75rem 1rem;
+      font-size: 0.875rem;
+      border: 1px solid var(--color-neutral-300, #dfe1e6);
+      background-color: white;
+      color: var(--color-text-primary, #172b4d);
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &:first-child {
+        border-radius: 4px 0 0 4px;
+      }
+
+      &:last-child {
+        border-radius: 0 4px 4px 0;
+      }
+
+      &:not(:last-child) {
+        border-right: none;
+      }
+
+      &:hover {
+        background-color: var(--color-neutral-100, #f7f8f9);
+        color: var(--color-info, #0052cc);
+      }
+
+      &.k-selected {
+        background-color: var(--color-info, #0052cc);
+        color: white;
+        border-color: var(--color-info, #0052cc);
+      }
+    }
+  }
+}
