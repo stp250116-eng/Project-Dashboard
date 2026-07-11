@@ -9,7 +9,7 @@ import { Card, CardBody, CardHeader } from '@progress/kendo-react-layout';
 import { ProgressBar } from '@progress/kendo-react-progressbars';
 import { Chip } from '@progress/kendo-react-buttons';
 import { getGoalLabel, getGoalDefinition } from '../services/goalDefinitions';
-import { LOW_DEFECT_TOOLTIP, HIGH_DEFECT_TOOLTIP } from '../constants/defectTooltips';
+import { LOW_DEFECT_TOOLTIP, HIGH_DEFECT_TOOLTIP, COMPLEXITY_TOOLTIP, OVERDUE_TOOLTIP } from '../constants/defectTooltips';
 import { formatTrainingDuration } from '@features/developer-training-dashboard/services/developerTrainingAnalytics';
 import type { DeveloperGoalData } from '../../models/goalModels';
 
@@ -175,6 +175,24 @@ export const DeveloperGoalCard: React.FC<DeveloperGoalCardProps> = ({
                     <span
                       title={HIGH_DEFECT_TOOLTIP}
                       aria-label="High level defect rate details"
+                      style={{ fontSize: '11px', color: 'var(--color-text-secondary, #666)', cursor: 'help' }}
+                    >
+                      ⓘ
+                    </span>
+                  )}
+                  {(goal.type === 'complexity') && (
+                    <span
+                      title={COMPLEXITY_TOOLTIP}
+                      aria-label="Complexity points guidance"
+                      style={{ fontSize: '11px', color: 'var(--color-text-secondary, #666)', cursor: 'help' }}
+                    >
+                      ⓘ
+                    </span>
+                  )}
+                  {(goal.type === 'overdue') && (
+                    <span
+                      title={OVERDUE_TOOLTIP}
+                      aria-label="Overdue ratio guidance"
                       style={{ fontSize: '11px', color: 'var(--color-text-secondary, #666)', cursor: 'help' }}
                     >
                       ⓘ

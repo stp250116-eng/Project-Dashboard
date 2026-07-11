@@ -35,6 +35,17 @@ export function calculateGoalStatus(
       return 'off-track';
     }
 
+    // Special-case: complexity points have bespoke boundaries defined by product.
+    if (goalId === 'complexity') {
+      // Complexity thresholds:
+      // - on-track: actual >= 0.65 * target
+      // - at-risk: actual >= 0.45 * target
+      // - off-track: actual < 0.45 * target
+      if (actual >= targetOrThreshold * 0.65) return 'on-track';
+      if (actual >= targetOrThreshold * 0.45) return 'at-risk';
+      return 'off-track';
+    }
+
     // Default must-reach behavior (used by complexity and others)
     if (actual >= targetOrThreshold * 0.9) return 'on-track';
     if (actual >= targetOrThreshold * 0.7) return 'at-risk';
@@ -55,6 +66,8 @@ export function calculateGoalStatus(
   
     // Special-case: High-Level Defect Rate bespoke bands
     if (goalId === 'defectHigh') {
+              console.log(`calculateGoalStatus: goalId=${goalId}, actual=${actual}, targetOrThreshold=${targetOrThreshold}`);
+
       // Product rule:
       // - Passing threshold: 5%
       // - on-track: defectRate% < 3%
@@ -65,6 +78,17 @@ export function calculateGoalStatus(
       return 'off-track';
     }
 
+    // Special-case: Overdue Ratio bespoke bands (percentage)
+    if (goalId === 'overdue') {
+
+      // Product rule for Delivery Efficiency (Overdue Ratio %):
+      // - on-track: overduePercent <= 5%
+      // - at-risk: overduePercent >= 6% and <= 10%
+      // - off-track: overduePercent > 10%
+      if (actual <= 5) return 'on-track';
+      if (actual >= 6 && actual <= 10) return 'at-risk';
+      return 'off-track';
+    }
   // Default must-not-exceed behavior
   if (actual <= targetOrThreshold) return 'on-track';
   if (actual <= targetOrThreshold * 1.5) return 'at-risk';
@@ -99,7 +123,8 @@ export function calculateSubScore(
   // For percentage-based thresholds (e.g., defect rates), `actual` is expected to be a percentage value.
   // Compute penalty as proportional overage percentage.
   const overagePercent = actual - targetOrThreshold;
-  const penalty = overagePercent; // 1:1 mapping of percentage points to penalty
+  // Map overage into a penalty relative to the threshold: (overage / threshold) * 100
+  const penalty = (overagePercent / targetOrThreshold) * 100;
 
   if (overagePercent <= 0) return 100;
 

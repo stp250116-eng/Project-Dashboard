@@ -35,6 +35,19 @@ describe('goalScoring', () => {
         expect(calculateGoalStatus('must-reach', 50, 0)).toBe('off-track');
         expect(calculateGoalStatus('must-reach', 50, -10)).toBe('off-track');
       });
+
+      it('applies complexity-specific bands when goalId is complexity', () => {
+        // on-track >= 0.65 * target
+        expect(calculateGoalStatus('must-reach', 65, 100, 'complexity')).toBe('on-track');
+        expect(calculateGoalStatus('must-reach', 80, 100, 'complexity')).toBe('on-track');
+
+        // at-risk >= 0.45 * target and < 0.65 * target
+        expect(calculateGoalStatus('must-reach', 50, 100, 'complexity')).toBe('at-risk');
+        expect(calculateGoalStatus('must-reach', 45, 100, 'complexity')).toBe('at-risk');
+
+        // off-track < 0.45 * target
+        expect(calculateGoalStatus('must-reach', 44.9, 100, 'complexity')).toBe('off-track');
+      });
     });
 
     describe('must-not-exceed goals', () => {
@@ -57,6 +70,19 @@ describe('goalScoring', () => {
       it('returns off-track for zero or negative threshold', () => {
         expect(calculateGoalStatus('must-not-exceed', 1, 0)).toBe('off-track');
         expect(calculateGoalStatus('must-not-exceed', 1, -5)).toBe('off-track');
+      });
+
+      it('applies overdue-specific bands when goalId is overdue', () => {
+        // on-track: <=5%
+        expect(calculateGoalStatus('must-not-exceed', 5, 10, 'overdue')).toBe('on-track');
+        expect(calculateGoalStatus('must-not-exceed', 4.9, 10, 'overdue')).toBe('on-track');
+
+        // at-risk: 6-10%
+        expect(calculateGoalStatus('must-not-exceed', 6, 10, 'overdue')).toBe('at-risk');
+        expect(calculateGoalStatus('must-not-exceed', 10, 10, 'overdue')).toBe('at-risk');
+
+        // off-track: >10%
+        expect(calculateGoalStatus('must-not-exceed', 10.1, 10, 'overdue')).toBe('off-track');
       });
     });
   });

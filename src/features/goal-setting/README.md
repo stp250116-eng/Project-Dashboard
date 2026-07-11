@@ -22,10 +22,12 @@ Each goal has an associated:
 
 ### Goal Status Logic
 
-**Must-Reach Goals** (Complexity):
-- `on-track`: actual ≥ target × 0.9 (90% of target)
-- `at-risk`: actual ≥ target × 0.7 (70% of target)
-- `off-track`: actual < target × 0.7
+**Complexity (High-Impact Delivery)** — bespoke boundaries:
+- `on-track`: actual ≥ target × 0.65 (65% of target)
+- `at-risk`: actual ≥ target × 0.45 (45% of target)
+- `off-track`: actual < target × 0.45 (45% of target)
+
+Note: Complexity uses a product-defined banding to reflect delivery cadence and enable earlier remediation signals for high-impact work.
 
 **Training (hours)** — bespoke boundaries:
 - `on-track`: actual ≥ target × 0.75 (75% of target)
@@ -46,6 +48,19 @@ Note: Training uses a looser on-track threshold and a finer at-risk cutoff to pr
 - `off-track`: defectRate% > 8% (>=9% considered off-track)
 
 These bands are enforced as a special-case for the Low-Level Defect Rate goal to provide clearer remediation guidance.
+
+**Overdue Ratio (Delivery Efficiency)**
+- Passing threshold: 10% (developer must not exceed 10% overdue ratio)
+- Formula: (Overdue Points / Total Epic Participation) × 100
+- Interpretation:
+  - Overdue Points: unique parent issues where delivery was delayed (from overdue-point records)
+  - Total Epic Participation: unique parent issues the developer participated in (from the same overdue-point dataset)
+- Bands:
+  - `on-track`: overdueRatio% ≤ 5%
+  - `at-risk`: overdueRatio% ≥ 6% AND ≤ 10%
+  - `off-track`: overdueRatio% > 10%
+
+Note: The implementation currently computes both values from the overdue-point records (unique parent issue counts per developer). If you want Total Epic Participation sourced from a broader dataset (all backlog participation), we can adjust the query to use a different Jira filter.
 
 **High-Level Defect Rate (bespoke bands)**
 - Passing threshold: 5% (developer must not exceed 5% to pass)

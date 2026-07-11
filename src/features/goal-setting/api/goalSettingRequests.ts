@@ -10,6 +10,7 @@ import {
   JIRA_DEFECT_FILTER,
   JIRA_COMPLEXITY_FILTER,
   JIRA_OVERDUE_FILTER,
+  JIRA_PARTICIPATION_FILTER,
   JIRA_DEFECT_FIELDS,
   JIRA_ENDPOINTS,
   JIRA_DEFAULT_MAX_RESULTS,
@@ -26,6 +27,30 @@ import {
   rankDevelopers,
 } from '../services/goalScoring';
 import type { DeveloperGoal, DeveloperGoalData, GoalType } from '../models/goalModels';
+
+// Helper: fetch all Jira issues for a JQL by paging startAt/maxResults
+async function fetchAllJiraIssues(jql: string, fields: string[] = []): Promise<any[]> {
+  const jiraClient = createApiClient(appConfig.jiraApiBase);
+  const pageSize = 100; // preferred page size
+  let nextPageToken: string | undefined;
+  const allIssues: any[] = [];
+
+  do {
+    const { data } = await jiraClient.get<any>(JIRA_ENDPOINTS.search, {
+      params: {
+        jql,
+        maxResults: pageSize,
+        fields: fields.join(','),
+        ...(nextPageToken ? { nextPageToken } : {}),
+      },
+    });
+
+    if (data?.issues?.length) allIssues.push(...data.issues);
+    nextPageToken = data?.isLast ? undefined : data?.nextPageToken;
+  } while (nextPageToken);
+
+  return allIssues;
+}
 
 /**
  * Fetch training information from Jira filter.
@@ -106,31 +131,87 @@ export async function getComplexityPoints(year: number): Promise<Record<string, 
  */
 export async function getOverdueItems(year: number): Promise<Record<string, number>> {
   const filterId = JIRA_OVERDUE_FILTER.id;
-  const jiraClient = createApiClient(appConfig.jiraApiBase);
-  const { data } = await jiraClient.get<any>(JIRA_ENDPOINTS.search, {
-    params: {
-      jql: `filter = ${filterId}`,
-      maxResults: JIRA_DEFAULT_MAX_RESULTS,
-      fields: ['assignee', 'duedate', 'status'].join(','),
-    },
-  });
+  const issues = await fetchAllJiraIssues(`filter = ${filterId}`, ['assignee', 'duedate', 'status']);
 
   const byDeveloper: Record<string, number> = {};
 
-  if (data?.issues) {
-    for (const issue of data.issues) {
-      const assigneeName = issue.fields?.assignee?.displayName;
-      const accountId = issue.fields?.assignee?.accountId;
-      const devId = assigneeName ?? accountId ?? 'Unassigned';
+  for (const issue of issues) {
+    const assigneeName = issue.fields?.assignee?.displayName;
+    const accountId = issue.fields?.assignee?.accountId;
+    const devId = assigneeName ?? accountId ?? 'Unassigned';
 
-      if (!byDeveloper[devId]) {
-        byDeveloper[devId] = 0;
-      }
-      byDeveloper[devId] += 1;
+    if (!byDeveloper[devId]) {
+      byDeveloper[devId] = 0;
     }
+    byDeveloper[devId] += 1;
   }
 
   return byDeveloper;
+}
+
+/**
+ * Fetch overdue participation records and compute per-developer unique parent issue counts.
+ * Returns map of developerId -> { overduePoints: number, totalParticipation: number }
+ */
+export async function getOverdueParticipation(year: number): Promise<Record<string, { overduePoints: number; totalParticipation: number }>> {
+  // Use the pagination helper to ensure we retrieve all overdue issues
+  const filterId = JIRA_OVERDUE_FILTER.id;
+  const issues = await fetchAllJiraIssues(`filter = ${filterId}`, ['assignee', 'parent']);
+
+  // Build set of unique parent issues per developer for overdue points
+  const developerOverdueParents = new Map<string, Set<string>>();
+  for (const issue of issues) {
+    const assigneeName = issue.fields?.assignee?.displayName ?? 'Unassigned';
+    const parentId = issue.fields?.parent?.key ?? 'Unknown';
+
+    const set = developerOverdueParents.get(assigneeName) ?? new Set<string>();
+    set.add(parentId);
+    developerOverdueParents.set(assigneeName, set);
+  }
+
+  // Fetch overall participation totals (unique parent issues per developer)
+  const participationTotals = await getTotalParticipation(year);
+
+  const result: Record<string, { overduePoints: number; totalParticipation: number }> = {};
+  for (const [dev, overdueSet] of developerOverdueParents.entries()) {
+    const overduePoints = overdueSet.size;
+    const totalParticipation = participationTotals[dev] ?? 0;
+    result[dev] = { overduePoints, totalParticipation };
+  }
+
+  return result;
+}
+
+/**
+ * Fetch Total Epic Participation per developer using saved filter ID 13725.
+ * Returns map of developerId -> totalParticipation (unique parent issue count).
+ */
+export async function getTotalParticipation(year: number): Promise<Record<string, number>> {
+  const filterId = JIRA_PARTICIPATION_FILTER.id;
+
+  // Reuse the pagination helper to retrieve all participation issues
+  const allIssues = await fetchAllJiraIssues(`filter = ${filterId}`, ['assignee', 'parent']);
+
+  const developerParents = new Map<string, Set<string>>();
+
+  for (const issue of allIssues) {
+    const assignee = issue.fields?.assignee;
+    const assigneeName = (assignee?.displayName || assignee?.accountId || 'Unassigned').toString().trim();
+
+    const parentField = issue.fields?.parent;
+    const parentId = parentField?.key ?? parentField?.id ?? issue.key ?? 'Unknown';
+
+    const set = developerParents.get(assigneeName) ?? new Set<string>();
+    if (parentId) set.add(parentId);
+    developerParents.set(assigneeName, set);
+  }
+
+  const result: Record<string, number> = {};
+  for (const [dev, set] of developerParents.entries()) {
+    result[dev] = set.size;
+  }
+
+  return result;
 }
 
 /**
@@ -141,11 +222,13 @@ export async function fetchGoalSettingData(year: number): Promise<DeveloperGoalD
   try {
     // Fetch all data in parallel
     
-    const [training, defects, complexity, overdue] = await Promise.all([
+    const [training, defects, complexity, overdue, overdueParticipation, totalParticipation] = await Promise.all([
       getTrainingInformation(year),
       getAlmDefects(year),
       getComplexityPoints(year),
       getOverdueItems(year),
+      getOverdueParticipation(year),
+      getTotalParticipation(year),
     ]);
     // Normalize developer keys across sources to avoid mismatches caused by
     // punctuation/spacing differences in displayName (e.g. 'Pongpon.Supatpitak'
@@ -169,6 +252,8 @@ export async function fetchGoalSettingData(year: number): Promise<DeveloperGoalD
     addKeysFrom(defects);
     addKeysFrom(complexity);
     addKeysFrom(overdue);
+    addKeysFrom(overdueParticipation);
+    addKeysFrom(totalParticipation);
 
     // Build DeveloperGoalData for each canonical developer key
     const developers: DeveloperGoalData[] = Array.from(canonicalKeys).map((canonicalId) => {
@@ -186,6 +271,8 @@ export async function fetchGoalSettingData(year: number): Promise<DeveloperGoalD
       const defectCounts = findValue<Record<string, number>>(defects, { low: 0, medium: 0, high: 0, critical: 0 });
       const complexityPts = findValue<number>(complexity, 0);
       const overdueCounts = findValue<number>(overdue, 0);
+      const overduePart = findValue<{ overduePoints: number; totalParticipation: number }>(overdueParticipation, { overduePoints: 0, totalParticipation: 0 });
+      const totalPartCount = findValue<number>(totalParticipation, 0);
 
       // Compute percent-based metrics relative to complexity points
       // If we have no complexity points, avoid reporting inflated percentages
@@ -197,7 +284,10 @@ export async function fetchGoalSettingData(year: number): Promise<DeveloperGoalD
       const defectHighPercent = complexityPts > 0
         ? (((defectCounts.high ?? 0) + (defectCounts.critical ?? 0)) / complexityPts) * 100
         : 0;
-      const overduePercent = complexityPts > 0 ? (overdueCounts / complexityPts) * 100 : 0;
+      // Use totalParticipation from the saved participation filter when available,
+      // otherwise fall back to the overdue participation's totalParticipation.
+      const denominator = totalPartCount > 0 ? totalPartCount : overduePart.totalParticipation;
+      const overduePercent = denominator > 0 ? (overduePart.overduePoints / denominator) * 100 : 0;
 
       // Build individual goal objects
       const goals: Record<GoalType, DeveloperGoal> = {
@@ -229,18 +319,17 @@ export async function fetchGoalSettingData(year: number): Promise<DeveloperGoalD
           type: 'complexity',
           actual: complexityPts,
           target: GOAL_DEFINITIONS.complexity.target,
-          status: calculateGoalStatus('must-reach', complexityPts, GOAL_DEFINITIONS.complexity.target!),
+          status: calculateGoalStatus('must-reach', complexityPts, GOAL_DEFINITIONS.complexity.target!, 'complexity'),
           subScore: calculateSubScore('must-reach', complexityPts, GOAL_DEFINITIONS.complexity.target!),
         },
         overdue: {
           type: 'overdue',
           actual: overduePercent,
           threshold: GOAL_DEFINITIONS.overdue.threshold,
-          status: calculateGoalStatus('must-not-exceed', overduePercent, GOAL_DEFINITIONS.overdue.threshold!),
+          status: calculateGoalStatus('must-not-exceed', overduePercent, GOAL_DEFINITIONS.overdue.threshold!, 'overdue'),
           subScore: calculateSubScore('must-not-exceed', overduePercent, GOAL_DEFINITIONS.overdue.threshold!),
         },
       };
-
       const overallScore = Object.values(goals).reduce((sum, goal) => sum + goal.subScore * 0.2, 0);
 
       // Use the preserved displayName for UI, and canonicalId as the stable key

@@ -50,6 +50,11 @@ export const JIRA_OVERDUE_FILTER = {
   name: '[OO] - GET OVER DUE ITEM',
 } as const;
 
+export const JIRA_PARTICIPATION_FILTER = {
+  id: 13725,
+  name: '[OO] - GET ALL DEVELOPER PARTICIPATE ISSUE SPECIFIC YEAR',
+} as const;
+
 export const JIRA_OVERDUE_FIELDS = {
   parent: 'parent',
   fixVersions: 'fixVersions',
