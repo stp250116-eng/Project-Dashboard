@@ -64,7 +64,7 @@ export const GoalSettingGrid: React.FC<GoalSettingGridProps> = ({
     return (
       <div className="rank-cell">
         <span className={`rank-badge rank-badge--${rank <= 3 ? 'top-three' : 'other'}`}>
-          #{rank}
+          {rank > 0 ? `#${rank}` : '—'}
         </span>
       </div>
     );
@@ -95,7 +95,7 @@ export const GoalSettingGrid: React.FC<GoalSettingGridProps> = ({
       >
         <GridColumn field="rank" title="Rank" width="80px" cell={RankCell} />
         <GridColumn field="name" title="Developer" width="180px" sortable={true} />
-        <GridColumn field="team" title="Team" width="120px" sortable={true} />
+        <GridColumn field="team" title="Team" width="120px" />
         <GridColumn field="role" title="Role" width="120px" sortable={true} />
         <GridColumn
           field="overallScore"

@@ -76,12 +76,14 @@ export const DeveloperGoalCard: React.FC<DeveloperGoalCardProps> = ({
                     ? '#c0c0c0'
                     : developer.rank === 3
                       ? '#cd7f32'
-                      : 'var(--color-surface, #f5f5f5)',
-              color: developer.rank <= 3 ? '#fff' : 'var(--color-text-primary, #333)',
+                      : developer.rank === 0
+                        ? 'var(--color-surface, #f5f5f5)'
+                        : 'var(--color-surface, #f5f5f5)',
+              color: developer.rank > 0 && developer.rank <= 3 ? '#fff' : 'var(--color-text-primary, #333)',
               boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
             }}
           >
-            #{developer.rank}
+            {developer.rank > 0 ? `#${developer.rank}` : '—'}
           </div>
         </div>
       </CardHeader>

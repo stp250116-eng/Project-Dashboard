@@ -162,9 +162,22 @@ export function calculateOverallScore(developer: DeveloperGoalData): number {
  * Mutates the input array's rank field.
  */
 export function rankDevelopers(developers: DeveloperGoalData[]): DeveloperGoalData[] {
-  const sorted = [...developers].sort((a, b) => b.overallScore - a.overallScore);
-  return sorted.map((dev, index) => ({
+  // Only Senior and Junior Developers are considered for ranking.
+  // High-level roles (e.g., managers, support, etc.) are displayed but excluded
+  // from the rank calculation and moved to the end of the returned list with rank 0.
+  const rankingRoles = new Set(['Senior Developer', 'Junior Developer']);
+
+  const rankingCandidates = developers.filter((d) => rankingRoles.has(d.role));
+  const others = developers.filter((d) => !rankingRoles.has(d.role));
+
+  const sorted = [...rankingCandidates].sort((a, b) => b.overallScore - a.overallScore);
+
+  const ranked = sorted.map((dev, index) => ({
     ...dev,
     rank: index + 1,
   }));
+
+  const othersWithZeroRank = others.map((dev) => ({ ...dev, rank: 0 }));
+
+  return [...ranked, ...othersWithZeroRank];
 }

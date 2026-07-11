@@ -212,7 +212,7 @@ describe('goalScoring', () => {
         {
           developerId: 'dev-1',
           name: 'Alice',
-          role: 'Engineer',
+          role: 'Senior Developer',
           team: 'Platform',
           goals: {} as any,
           overallScore: 75,
@@ -221,7 +221,7 @@ describe('goalScoring', () => {
         {
           developerId: 'dev-2',
           name: 'Bob',
-          role: 'Engineer',
+          role: 'Senior Developer',
           team: 'Platform',
           goals: {} as any,
           overallScore: 95,
@@ -230,7 +230,7 @@ describe('goalScoring', () => {
         {
           developerId: 'dev-3',
           name: 'Charlie',
-          role: 'Engineer',
+          role: 'Senior Developer',
           team: 'Platform',
           goals: {} as any,
           overallScore: 85,
@@ -253,7 +253,7 @@ describe('goalScoring', () => {
         {
           developerId: 'dev-1',
           name: 'Alice',
-          role: 'Engineer',
+          role: 'Senior Developer',
           team: 'Platform',
           goals: {} as any,
           overallScore: 75,
@@ -270,7 +270,7 @@ describe('goalScoring', () => {
         {
           developerId: 'dev-1',
           name: 'Alice',
-          role: 'Engineer',
+          role: 'Senior Developer',
           team: 'Platform',
           goals: {} as any,
           overallScore: 85,
@@ -279,7 +279,7 @@ describe('goalScoring', () => {
         {
           developerId: 'dev-2',
           name: 'Bob',
-          role: 'Engineer',
+          role: 'Senior Developer',
           team: 'Platform',
           goals: {} as any,
           overallScore: 85,

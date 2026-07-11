@@ -100,6 +100,21 @@ All notable changes to this project are documented here. Format loosely follows
 - Feature modules: dashboard, jira-overview, sprint-board, release-dashboard,
   defect-dashboard, team-capacity, reports — each with pages, hooks, models,
   tests, and README.
+
+### Goal Setting
+
+- **Removed** `Sort by Team` option from the Goal Setting toolbar and UI. The
+  Team column is no longer sortable and team-based sorting code paths were
+  removed to simplify the product UX.
+- **Added** default `Sort by Rank` behavior for Goal Setting: the page now
+  defaults to sorting by `Rank` (ascending). The `Rank` view shows ranked
+  developers `1`–`7` first, then other ranked developers, and finally
+  unranked developers (displayed as `—`).
+- **Role overrides & ranking rules**: specific display names are mapped to
+  high-level roles (e.g. `Product Delivery Manager`, `L3 Sidecar/Support`),
+  and only developers with roles `Senior Developer` or `Junior Developer` are
+  included in numeric rank calculations. High-level roles are visible in the
+  UI but excluded from ranking and assigned `rank: 0`.
 - Jest unit/component tests for shared services and feature pages.
 - Playwright smoke tests: startup, navigation, dashboard, Jira overview,
   sprint board, reports.

@@ -335,16 +335,37 @@ export async function fetchGoalSettingData(year: number): Promise<DeveloperGoalD
       // Use the preserved displayName for UI, and canonicalId as the stable key
       const developerId = displayName;
 
-      return {
-        developerId,
-        name: displayName,
-        role: 'Engineer',
-        team: 'Platform',
-        trainingSeconds: trainingSeconds,
-        goals,
-        overallScore: Math.round(overallScore * 100) / 100,
-        rank: 0,
-      };
+        // Role overrides: map specific canonical developer ids to high-level roles
+        const roleOverrides: Record<string, string> = {
+          // High Level Role
+          [normalize('Sittichart Phikunthong')]: 'Product Delivery Manager',
+          [normalize('Puchong Kaewchote')]: 'L3 Sidecar/Support',
+          [normalize('sukanya phikultong')]: 'L3 Sidecar/Support',
+
+          // Senior Developer
+          [normalize('Chalotorn.Tangkhajornkit')]: 'Senior Developer',
+          [normalize('Pongpon.Supatpitak')]: 'Senior Developer',
+          [normalize('Suknarin Chaikheaw')]: 'Senior Developer',
+
+          // Junior Developer
+          [normalize('Aattawut.Nutlamyong')]: 'Junior Developer',
+          [normalize('Yotin Sara')]: 'Junior Developer',
+          [normalize('Wasapon')]: 'Junior Developer',
+          [normalize('Apisit Prompha')]: 'Junior Developer',
+        };
+
+        const resolvedRole = roleOverrides[canonicalId] ?? 'Engineer';
+
+        return {
+          developerId,
+          name: displayName,
+          role: resolvedRole,
+          team: 'Platform',
+          trainingSeconds: trainingSeconds,
+          goals,
+          overallScore: Math.round(overallScore * 100) / 100,
+          rank: 0,
+        };
     });
 
     // Sort by rank

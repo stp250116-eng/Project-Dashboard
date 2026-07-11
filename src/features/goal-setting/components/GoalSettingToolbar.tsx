@@ -11,8 +11,8 @@ interface GoalSettingToolbarProps {
   selectedYear: number;
   onYearChange: (year: number) => void;
   onFilterChange?: (filter: string) => void;
-  onSortChange?: (sortBy: 'score' | 'name' | 'team') => void;
-  sortBy?: 'score' | 'name' | 'team';
+  onSortChange?: (sortBy: 'score' | 'name' | 'rank') => void;
+  sortBy?: 'score' | 'name' | 'rank';
   searchText?: string;
   onSearchChange?: (text: string) => void;
 }
@@ -163,15 +163,15 @@ export const GoalSettingToolbar: React.FC<GoalSettingToolbarProps> = ({
           </Button>
           <Button
             togglable={true}
-            selected={sortBy === 'team'}
-            onClick={() => onSortChange?.('team')}
+            selected={sortBy === 'rank'}
+            onClick={() => onSortChange?.('rank')}
             style={{
               flex: 1,
               fontSize: '12px',
               padding: '8px 4px',
             }}
           >
-            Team
+            Rank
           </Button>
         </ButtonGroup>
       </div>

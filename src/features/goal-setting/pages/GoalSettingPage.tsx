@@ -14,7 +14,7 @@ import type { DeveloperGoalData } from '../models/goalModels';
 export const GoalSettingPage: React.FC = () => {
   const [selectedYear, setSelectedYear] = React.useState<number>(new Date().getFullYear());
   const [searchText, setSearchText] = React.useState<string>('');
-  const [sortBy, setSortBy] = React.useState<'score' | 'name' | 'team'>('score');
+  const [sortBy, setSortBy] = React.useState<'score' | 'name' | 'rank'>('rank');
 
   const { data, isLoading, error } = useGoalSetting(selectedYear);
 
@@ -37,15 +37,21 @@ export const GoalSettingPage: React.FC = () => {
 
     // Apply sorting
     switch (sortBy) {
+      case 'rank': {
+        // Top ranks 1-7 first (ascending), then remaining ranked developers (8+), then no-rank (rank === 0) at the end
+        const topSeven = filtered.filter((d) => d.rank >= 1 && d.rank <= 7).sort((a, b) => a.rank - b.rank);
+        const othersRanked = filtered.filter((d) => d.rank > 7).sort((a, b) => a.rank - b.rank);
+        const noRank = filtered.filter((d) => d.rank === 0);
+        filtered = [...topSeven, ...othersRanked, ...noRank];
+        break;
+      }
       case 'score':
         filtered.sort((a, b) => b.overallScore - a.overallScore);
         break;
       case 'name':
         filtered.sort((a, b) => a.name.localeCompare(b.name));
         break;
-      case 'team':
-        filtered.sort((a, b) => a.team.localeCompare(b.team));
-        break;
+      // 'team' sort removed per feature request
     }
 
     return filtered;

@@ -185,8 +185,8 @@ const { data, isLoading, error } = useGoalSetting(2026);
 ### GoalSettingPage
 Main page container. Features:
 - Year selector (dropdown)
-- Developer search (by name, team, role)
-- Sort toggles (by score, name, team)
+- Developer search (by name or role)
+- Sort toggles (by score, name, rank) — default: `rank` (see Ranking behavior below)
 - Conditional rendering (loading, error, empty, results)
 - Developer grid display
 
@@ -194,15 +194,29 @@ Main page container. Features:
 Controls for filtering and sorting:
 - Year selector (Kendo DropDownList)
 - Search input (text field)
-- Sort buttons (Overall Score, Name, Team)
+- Sort buttons (Overall Score, Name, Rank)
 
 ### GoalSettingGrid
 KendoReact Grid with:
 - Columns: Rank, Developer, Team, Role, Overall Score, Goals
-- Sortable headers
+- Rank column and Overall Score are sortable; `Team` column is not sortable (Team sort removed)
 - Paginated (10 per page)
 - Status chips for each goal
 - Row click handler (future: detail page or modal)
+
+### Role Overrides & Ranking Behavior
+- **Role Overrides**: Certain developer display names are mapped to high-level roles for UI and product clarity. Examples configured in code include:
+  - `Sittichart Phikunthong` → `Product Delivery Manager`
+  - `Puchong Kaewchote` → `L3 Sidecar/Support`
+  - `sukanya phikultong` → `L3 Sidecar/Support`
+  - `Chalotorn.Tangkhajornkit`, `Pongpon.Supatpitak`, `Suknarin Chaikheaw` → `Senior Developer`
+  - `Aattawut.Nutlamyong`, `Yotin Sara`, `Wasapon`, `Apisit Prompha` → `Junior Developer`
+
+- **Ranking Behavior**:
+  - Only developers with roles `Senior Developer` or `Junior Developer` are included in the numeric ranking calculation.
+  - High-level roles (managers, support, etc.) are shown in the UI but **excluded** from rank calculation and assigned `rank: 0`.
+  - Default sort is `Rank`: developers ranked `1`–`7` appear first (ascending), followed by other ranked developers (`8+`), and finally unranked developers (displayed with `—` instead of a rank number).
+  - This behavior ensures leadership and sidecar/support personas remain visible but do not affect developer ranking math.
 
 ### DeveloperGoalCard
 Reusable card component displaying:
