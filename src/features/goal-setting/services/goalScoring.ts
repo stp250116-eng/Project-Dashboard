@@ -3,7 +3,7 @@
  * All functions are side-effect-free and unit-testable.
  */
 
-import type { DeveloperGoal, DeveloperGoalData, GoalStatus, GoalType } from '../models/goalModels';
+import type { DeveloperGoalData, GoalStatus, GoalType } from '../models/goalModels';
 
 /** Multiplier for penalizing goals that exceed threshold by 3x or more. */
 export const OVER_THRESHOLD_CEILING_MULTIPLIER = 3;

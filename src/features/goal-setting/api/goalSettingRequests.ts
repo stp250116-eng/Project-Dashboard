@@ -6,26 +6,18 @@
 import { createApiClient } from '@shared/api';
 import { appConfig } from '@shared/constants/appConfig';
 import {
-  JIRA_TRAINING_FILTER,
   JIRA_DEFECT_FILTER,
-  JIRA_COMPLEXITY_FILTER,
   JIRA_OVERDUE_FILTER,
   JIRA_PARTICIPATION_FILTER,
-  JIRA_DEFECT_FIELDS,
   JIRA_ENDPOINTS,
   JIRA_DEFAULT_MAX_RESULTS,
 } from '@integrations/jira/jiraConstants';
 import { jiraApi } from '@integrations/jira/jiraApi';
 import { mapTrainingRecords } from '@features/developer-training-dashboard/services/developerTrainingMapper';
-import { getComplexityValueFromFields, parseComplexityValue } from '@features/complexity-point/services/complexityAnalytics';
+// complexityAnalytics helpers intentionally omitted to avoid unused imports
 import { complexityApi } from '@features/complexity-point/api/complexityApi';
 import { GOAL_DEFINITIONS } from '../services/goalDefinitions';
-import {
-  calculateGoalStatus,
-  calculateSubScore,
-  calculateOverallScore,
-  rankDevelopers,
-} from '../services/goalScoring';
+import { calculateGoalStatus, calculateSubScore, rankDevelopers } from '../services/goalScoring';
 import type { DeveloperGoal, DeveloperGoalData, GoalType } from '../models/goalModels';
 
 // Helper: fetch all Jira issues for a JQL by paging startAt/maxResults
@@ -57,7 +49,7 @@ async function fetchAllJiraIssues(jql: string, fields: string[] = []): Promise<a
  * Returns map of developerId -> training hours.
  */
 // ...existing code...
-export async function getTrainingInformation(year: number): Promise<Record<string, number>> {
+export async function getTrainingInformation(_year: number): Promise<Record<string, number>> {
   // Return aggregated training time in seconds per developer so callers
   // can format minutes/seconds consistently with the Training Dashboard.
   const rawRecords = await jiraApi.getTrainingInformation(JIRA_DEFAULT_MAX_RESULTS);
@@ -79,9 +71,7 @@ export async function getTrainingInformation(year: number): Promise<Record<strin
  * Fetch defects from Jira filter.
  * Returns map of developerId -> { low: count, high: count }.
  */
-export async function getAlmDefects(
-  year: number,
-): Promise<Record<string, { low: number; medium: number; high: number; critical: number }>> {
+export async function getAlmDefects(_year: number): Promise<Record<string, { low: number; medium: number; high: number; critical: number }>> {
   const filterId = JIRA_DEFECT_FILTER.id;
   // Prefer jiraApi.getDefects which returns mapped defect records
   const defects = await jiraApi.getDefects(filterId, JIRA_DEFAULT_MAX_RESULTS);
@@ -112,7 +102,7 @@ export async function getAlmDefects(
  * Fetch complexity points from Jira filter.
  * Returns map of developerId -> complexity points.
  */
-export async function getComplexityPoints(year: number): Promise<Record<string, number>> {
+export async function getComplexityPoints(_year: number): Promise<Record<string, number>> {
   // Reuse canonical complexity API & mapper so Goal Setting uses the exact
   // same JQL, fields, and parsing logic as the Complexity dashboard.
   const records = await complexityApi.getComplexityPoints();
@@ -129,7 +119,7 @@ export async function getComplexityPoints(year: number): Promise<Record<string, 
  * Fetch overdue items from Jira filter.
  * Returns map of developerId -> overdue item count.
  */
-export async function getOverdueItems(year: number): Promise<Record<string, number>> {
+export async function getOverdueItems(_year: number): Promise<Record<string, number>> {
   const filterId = JIRA_OVERDUE_FILTER.id;
   const issues = await fetchAllJiraIssues(`filter = ${filterId}`, ['assignee', 'duedate', 'status']);
 
@@ -186,7 +176,7 @@ export async function getOverdueParticipation(year: number): Promise<Record<stri
  * Fetch Total Epic Participation per developer using saved filter ID 13725.
  * Returns map of developerId -> totalParticipation (unique parent issue count).
  */
-export async function getTotalParticipation(year: number): Promise<Record<string, number>> {
+export async function getTotalParticipation(_year: number): Promise<Record<string, number>> {
   const filterId = JIRA_PARTICIPATION_FILTER.id;
 
   // Reuse the pagination helper to retrieve all participation issues
@@ -270,7 +260,6 @@ export async function fetchGoalSettingData(year: number): Promise<DeveloperGoalD
       const trainingHours = Math.round(((trainingSeconds ?? 0) / 3600) * 100) / 100;
       const defectCounts = findValue<Record<string, number>>(defects, { low: 0, medium: 0, high: 0, critical: 0 });
       const complexityPts = findValue<number>(complexity, 0);
-      const overdueCounts = findValue<number>(overdue, 0);
       const overduePart = findValue<{ overduePoints: number; totalParticipation: number }>(overdueParticipation, { overduePoints: 0, totalParticipation: 0 });
       const totalPartCount = findValue<number>(totalParticipation, 0);
 

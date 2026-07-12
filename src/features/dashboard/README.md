@@ -5,6 +5,12 @@
 Executive landing page aggregating KPIs, issue distribution, and recent activity
 across teams and Jira projects.
 
+## Jira Filter
+
+- **Filter / Source:** Aggregates KPIs from multiple feature filters (see `docs/jira-filters.md` for per-feature saved filter IDs).
+- **Purpose:** Executive summary; does not use a single saved filter but composes KPI sets from feature filters and internal APIs.
+
+
 ## Business Requirements
 
 - Provide an at-a-glance executive summary on application start.

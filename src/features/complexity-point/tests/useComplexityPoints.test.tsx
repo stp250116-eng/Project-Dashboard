@@ -40,7 +40,7 @@ describe('useComplexityPoints', () => {
   });
 
   it('executes the query callback and exposes the resulting summary', async () => {
-    const records = [];
+    const records: any[] = [];
     let queryFn: (() => Promise<unknown>) | undefined;
 
     jest.mocked(complexityApi.getComplexityPoints).mockResolvedValue(records as never);

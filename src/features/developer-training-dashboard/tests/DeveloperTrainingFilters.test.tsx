@@ -23,12 +23,11 @@ jest.mock('@shared/components', () => ({
 }));
 
 jest.mock('@progress/kendo-react-dropdowns', () => ({
-  MultiSelect: ({ placeholder, value, onChange, ariaLabel, data }: {
+  MultiSelect: ({ placeholder, value, onChange, ariaLabel }: {
     placeholder: string;
     value: string[];
     onChange: (event: { value: string[] }) => void;
     ariaLabel: string;
-    data: string[];
     autoClose?: boolean;
   }) => (
     <input

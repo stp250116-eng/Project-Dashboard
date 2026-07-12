@@ -21,7 +21,7 @@ describe('mapTrainingRecords', () => {
           assignee: null,
           aggregatetimespent: null,
           customfield_11546: '   ',
-          customfield_11547: { value: 42 },
+          customfield_11547: { value: 42 as any },
         },
       },
       {
@@ -31,7 +31,7 @@ describe('mapTrainingRecords', () => {
           assignee: { displayName: 'Grace Hopper' },
           aggregatetimespent: Number.NaN,
           customfield_11546: { value: '  Online Learning  ' },
-          customfield_11547: null,
+          customfield_11547: null as any,
         },
       },
     ];
@@ -217,8 +217,8 @@ describe('mapTrainingRecords', () => {
         fields: {
           assignee: { displayName: 'Person' },
           aggregatetimespent: 3600,
-          customfield_11546: { value: 123 },
-          customfield_11547: { value: null },
+          customfield_11546: { value: 123 as any },
+          customfield_11547: { value: null as any },
         },
       },
     ];

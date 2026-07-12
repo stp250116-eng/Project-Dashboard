@@ -8,10 +8,11 @@ import React from 'react';
 import { Card, CardBody, CardHeader } from '@progress/kendo-react-layout';
 import { ProgressBar } from '@progress/kendo-react-progressbars';
 import { Chip } from '@progress/kendo-react-buttons';
-import { getGoalLabel, getGoalDefinition } from '../services/goalDefinitions';
+import { getGoalLabel } from '../services/goalDefinitions';
+import type { GoalType } from '../models/goalModels';
 import { LOW_DEFECT_TOOLTIP, HIGH_DEFECT_TOOLTIP, COMPLEXITY_TOOLTIP, OVERDUE_TOOLTIP } from '../constants/defectTooltips';
 import { formatTrainingDuration } from '@features/developer-training-dashboard/services/developerTrainingAnalytics';
-import type { DeveloperGoalData } from '../../models/goalModels';
+import type { DeveloperGoalData } from '../models/goalModels';
 
 interface DeveloperGoalCardProps {
   developer: DeveloperGoalData;
@@ -34,12 +35,22 @@ export const DeveloperGoalCard: React.FC<DeveloperGoalCardProps> = ({
   };
 
   // Count goals by status for quick summary
-  const goalSummary = Object.values(developer.goals).reduce(
+  const goalsArray = Object.values(developer.goals) as Array<{
+    type: GoalType;
+    status: 'on-track' | 'at-risk' | 'off-track';
+    actual?: number;
+    target?: number;
+    threshold?: number;
+    subScore?: number;
+    [key: string]: any;
+  }>;
+
+  const goalSummary = goalsArray.reduce<Record<'on-track' | 'at-risk' | 'off-track', number>>(
     (acc, goal) => {
       acc[goal.status] = (acc[goal.status] || 0) + 1;
       return acc;
     },
-    {} as Record<string, number>
+    { 'on-track': 0, 'at-risk': 0, 'off-track': 0 }
   );
 
   return (
@@ -152,7 +163,7 @@ export const DeveloperGoalCard: React.FC<DeveloperGoalCardProps> = ({
             Goal Details
           </h4>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
-            {Object.values(developer.goals).map((goal) => (
+            {goalsArray.map((goal) => (
               <div
                 key={goal.type}
                 style={{
@@ -163,7 +174,7 @@ export const DeveloperGoalCard: React.FC<DeveloperGoalCardProps> = ({
                 }}
               >
                 <div style={{ fontSize: '11px', fontWeight: '600', marginBottom: '4px', color: 'var(--color-text-primary, #333)', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <span>{getGoalLabel(goal.type)}</span>
+                          <span>{getGoalLabel(goal.type)}</span>
                   {(goal.type === 'defectLow') && (
                     <span
                       title={LOW_DEFECT_TOOLTIP}
@@ -224,8 +235,8 @@ export const DeveloperGoalCard: React.FC<DeveloperGoalCardProps> = ({
                     <span style={{ fontSize: '12px', fontWeight: '600', color: 'var(--color-text-primary, #333)' }}>
                       {(() => {
                         // Format display per goal type
-                        if (goal.type === 'training') {
-                          const secs = (developer as DeveloperGoalData).trainingSeconds ?? Math.round(goal.actual * 3600);
+                          if (goal.type === 'training') {
+                            const secs = (developer as DeveloperGoalData).trainingSeconds ?? Math.round((goal.actual ?? 0) * 3600);
                           return `${formatTrainingDuration(secs)} / ${goal.target} hrs`;
                         }
                         if (goal.type === 'complexity') {

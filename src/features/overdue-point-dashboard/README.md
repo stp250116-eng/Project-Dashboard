@@ -4,6 +4,18 @@
 
 Live overdue delivery analytics sourced from Jira filter **[OO] - GET OVER DUE ITEM** (id `13525`). The dashboard helps Engineering Managers identify developers who participate in delayed parent issues, monitor release impact, and surface collaboration risk.
 
+## Jira Filter
+
+- **Filter name / ID:** [OO] - GET OVER DUE ITEM — id `13525`
+- **JQL / Saved filter:** `filter = 13525`
+- **Purpose:** Primary data source for overdue delivery analytics; each parent issue counts once per developer.
+- **Requested Jira fields:** `assignee`, `parent`, `fixVersions[]`, `summary`
+- **Mapping rules:**
+	- `parent.key` and `parent.fields.summary` → parent issue reference
+	- `fixVersions[0].name` → release
+- **Sample fixture:** `test/fixtures/jiraIssues.ts`
+- **Owner / cadence:** saved filter maintained in Jira; page fetches live and paginates.
+
 ## Business Requirements
 
 - Load live overdue data from Jira filter `13525`.

@@ -8,9 +8,8 @@ import {
   calculateSubScore,
   calculateOverallScore,
   rankDevelopers,
-  OVER_THRESHOLD_CEILING_MULTIPLIER,
 } from './goalScoring';
-import type { DeveloperGoalData } from '../../models/goalModels';
+import type { DeveloperGoalData } from '../models/goalModels';
 
 describe('goalScoring', () => {
   describe('calculateGoalStatus', () => {

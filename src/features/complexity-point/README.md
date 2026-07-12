@@ -4,6 +4,18 @@
 
 A summary page for complexity points sourced from the Jira saved filter **GET COMPLEXITY BY YEAR**. The page lets users filter by developer and view a ranked summary table of complexity points per employee.
 
+## Jira Filter
+
+- **Filter name / ID:** GET COMPLEXITY BY YEAR (saved filter referenced in feature)
+- **JQL / Saved filter:** `filter = <saved-filter-id>` (refer to Jira for exact id)
+- **Purpose:** Provides the yearly complexity point set used to compute complexity totals and rankings.
+- **Requested Jira fields:** `assignee`, `customfield_10704`, other fields named `complexity` (fallback)
+- **Mapping rules:**
+	- `customfield_10704` → complexity points (parse number, default `0`)
+	- If `customfield_10704` missing, search other fields named `complexity`
+- **Sample fixture:** `test/fixtures/*` (see complexity tests)
+- **Owner / cadence:** saved filter maintained in Jira; page fetches live and paginates.
+
 ## Business Requirements
 
 - Load live complexity-point data from the Jira saved filter **GET COMPLEXITY BY YEAR**.

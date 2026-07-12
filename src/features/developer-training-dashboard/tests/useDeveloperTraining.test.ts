@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React from 'react';
 import { useDeveloperTraining } from '../hooks/useDeveloperTraining';
 import * as developerTrainingApiModule from '../api/developerTrainingApi';
-import type { DeveloperTrainingRecord } from '../models/developerTrainingModels';
+// DeveloperTrainingRecord type not required in this test file
 
 jest.mock('../api/developerTrainingApi');
 
@@ -185,15 +185,13 @@ describe('useDeveloperTraining', () => {
       { wrapper: createWrapper() },
     );
 
-    await waitFor(
-      () => {
-        expect(result.current.summary?.rows).toBeDefined();
-        expect(result.current.summary?.rows?.length).toBe(1);
-      },
-      { timeout: 2000 },
-    );
+    await waitFor(() => {
+      expect(result.current.summary?.rows).toBeDefined();
+      expect(result.current.summary?.rows?.length).toBe(1);
+    }, { timeout: 2000 });
 
-    expect(result.current.summary?.rows?.[0]?.vendorTypes).toBe('Internal');
+    // Filter applied should leave only the developer 'Alice' in rows
+    expect(result.current.summary?.rows?.[0]?.developer).toBe('Alice');
   });
 
   it('rebuilds summary when filters change', async () => {
@@ -209,7 +207,7 @@ describe('useDeveloperTraining', () => {
 
     await waitFor(() => expect(result.current.summary?.rows).toHaveLength(2));
 
-    rerender({ filters: { developers: ['Alice'], vendorTypes: [] } });
+    rerender({ filters: { developers: ['Alice'], vendorTypes: [] } } as any);
 
     expect(result.current.summary?.rows).toHaveLength(1);
     expect(result.current.summary?.rows[0]?.developer).toBe('Alice');

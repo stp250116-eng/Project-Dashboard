@@ -4,6 +4,19 @@
 
 Live developer training analytics sourced from Jira filter **[OO] - GET TRAINING INFORMATION** (id `12947`). The dashboard aggregates training hours by developer and helps teams understand training volume, vendor mix, and the most popular learning categories.
 
+## Jira Filter
+
+- **Filter name / ID:** [OO] - GET TRAINING INFORMATION — id `12947`
+- **JQL / Saved filter:** `filter = 12947`
+- **Purpose:** Collect training records (aggregate time spent, training type, vendor) per developer for training analytics and KPIs.
+- **Requested Jira fields:** `assignee`, `aggregatetimespent`, `customfield_11546` (training type), `customfield_11547` (vendor)
+- **Mapping rules:**
+	- `aggregatetimespent` → training hours (seconds → hours)
+	- Normalize/trim `customfield_11546` and `customfield_11547` into `trainingType` / `vendor`
+- **Sample fixture / tests:** see `src/features/developer-training-dashboard/tests` and test fixtures used there.
+- **Owner / cadence:** maintain the saved filter in Jira; the page fetches live on each visit and supports pagination.
+
+
 ## Business Requirements
 
 - Load live training data from Jira filter `12947` on every visit.

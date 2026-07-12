@@ -12,7 +12,7 @@ describe('developerTrainingApi', () => {
 
   describe('getTrainingRecords', () => {
     it('calls jiraApi.getTrainingInformation with default page size', async () => {
-      const mockRecords = [
+      const mockRecords: any[] = [
         {
           id: '1',
           key: 'TRAIN-1',
@@ -25,7 +25,7 @@ describe('developerTrainingApi', () => {
         },
       ];
 
-      mockedJiraApi.getTrainingInformation.mockResolvedValue(mockRecords);
+      mockedJiraApi.getTrainingInformation.mockResolvedValue(mockRecords as any);
 
       const result = await developerTrainingApi.getTrainingRecords();
 
@@ -34,7 +34,7 @@ describe('developerTrainingApi', () => {
     });
 
     it('calls jiraApi.getTrainingInformation with custom page size', async () => {
-      const mockRecords = [];
+      const mockRecords: any[] = [];
       mockedJiraApi.getTrainingInformation.mockResolvedValue(mockRecords);
 
       await developerTrainingApi.getTrainingRecords(50);
@@ -66,7 +66,7 @@ describe('developerTrainingApi', () => {
         },
       ];
 
-      mockedJiraApi.getTrainingInformation.mockResolvedValue(mockRecords);
+        mockedJiraApi.getTrainingInformation.mockResolvedValue(mockRecords as any);
 
       const result = await developerTrainingApi.getTrainingRecords();
 
@@ -76,7 +76,7 @@ describe('developerTrainingApi', () => {
     });
 
     it('handles empty result from jiraApi', async () => {
-      mockedJiraApi.getTrainingInformation.mockResolvedValue([]);
+      mockedJiraApi.getTrainingInformation.mockResolvedValue([] as any);
 
       const result = await developerTrainingApi.getTrainingRecords();
 
@@ -91,7 +91,7 @@ describe('developerTrainingApi', () => {
     });
 
     it('uses page size 100 as default', async () => {
-      mockedJiraApi.getTrainingInformation.mockResolvedValue([]);
+      mockedJiraApi.getTrainingInformation.mockResolvedValue([] as any);
 
       await developerTrainingApi.getTrainingRecords();
 
@@ -99,7 +99,7 @@ describe('developerTrainingApi', () => {
     });
 
     it('respects custom page sizes', async () => {
-      mockedJiraApi.getTrainingInformation.mockResolvedValue([]);
+      mockedJiraApi.getTrainingInformation.mockResolvedValue([] as any);
 
       await developerTrainingApi.getTrainingRecords(200);
 

@@ -98,9 +98,9 @@ describe('GoalSettingPage', () => {
 
     render(<GoalSettingPage />, { wrapper: createWrapper() });
 
-    expect(screen.getByText('Year:')).toBeInTheDocument();
-    expect(screen.getByText('Search:')).toBeInTheDocument();
-    expect(screen.getByText('Sort By:')).toBeInTheDocument();
+    expect(screen.getByText('Year')).toBeInTheDocument();
+    expect(screen.getByText('Search')).toBeInTheDocument();
+    expect(screen.getByText('Sort By')).toBeInTheDocument();
   });
 
   it('shows loading state', () => {
@@ -118,7 +118,7 @@ describe('GoalSettingPage', () => {
 
     render(<GoalSettingPage />, { wrapper: createWrapper() });
 
-    expect(screen.getByText('Loading goal data...')).toBeInTheDocument();
+    expect(screen.getByText('Loading developer goals...')).toBeInTheDocument();
   });
 
   it('filters developers by search text', async () => {
@@ -136,7 +136,7 @@ describe('GoalSettingPage', () => {
 
     render(<GoalSettingPage />, { wrapper: createWrapper() });
 
-    const searchInput = screen.getByPlaceholderText('Search by developer name...');
+    const searchInput = screen.getByPlaceholderText('Developer name, team, or role...');
     await userEvent.type(searchInput, 'Alice');
 
     // After filtering, should show filtered results
@@ -160,11 +160,11 @@ describe('GoalSettingPage', () => {
 
     render(<GoalSettingPage />, { wrapper: createWrapper() });
 
-    const searchInput = screen.getByPlaceholderText('Search by developer name...');
+    const searchInput = screen.getByPlaceholderText('Developer name, team, or role...');
     await userEvent.type(searchInput, 'NonExistent');
 
     await waitFor(() => {
-      expect(screen.getByText('No developers found matching your search.')).toBeInTheDocument();
+      expect(screen.getByText('No goal data available.')).toBeInTheDocument();
     });
   });
 });

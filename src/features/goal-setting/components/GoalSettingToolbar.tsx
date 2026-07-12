@@ -28,7 +28,7 @@ const YEAR_OPTIONS = [
 export const GoalSettingToolbar: React.FC<GoalSettingToolbarProps> = ({
   selectedYear,
   onYearChange,
-  onFilterChange,
+  onFilterChange: _onFilterChange,
   onSortChange,
   sortBy = 'score',
   searchText = '',
@@ -136,7 +136,8 @@ export const GoalSettingToolbar: React.FC<GoalSettingToolbarProps> = ({
         >
           Sort By
         </label>
-        <ButtonGroup style={{ width: '100%', display: 'flex', gap: '4px' }}>
+        <div style={{ width: '100%', display: 'flex', gap: '4px' }}>
+          <ButtonGroup>
           <Button
             togglable={true}
             selected={sortBy === 'score'}
@@ -173,7 +174,8 @@ export const GoalSettingToolbar: React.FC<GoalSettingToolbarProps> = ({
           >
             Rank
           </Button>
-        </ButtonGroup>
+          </ButtonGroup>
+        </div>
       </div>
     </div>
   );

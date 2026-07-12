@@ -33,17 +33,7 @@ jest.mock('@shared/components', () => ({
   ),
 }));
 jest.mock('../components/DeveloperTrainingFilters', () => ({
-  DeveloperTrainingFilters: ({
-    options,
-    filters,
-    onChange,
-    onReset,
-  }: {
-    options: unknown;
-    filters: unknown;
-    onChange: (filters: unknown) => void;
-    onReset: () => void;
-  }) => (
+  DeveloperTrainingFilters: ({ onChange, onReset }: { onChange: (filters: unknown) => void; onReset: () => void }) => (
     <div data-testid="filters">
       <button onClick={() => onChange({ developers: ['Test'], vendorTypes: [] })}>
         Change Filter

@@ -113,6 +113,16 @@ For each developer:
 
 ---
 
+## Jira Filter
+
+- **Filters used:**
+  - Training — id `12947` (`filter = 12947`)
+  - Defects — id `11471` (`filter = 11471`)
+  - Complexity — id `13492` (`filter = 13492`)
+  - Overdue — id `13525` (`filter = 13525`)
+- **Purpose:** Aggregates data from these saved filters to compute per-developer goal metrics. See each feature README for requested fields and mapping rules.
+
+
 ## Feature Structure
 
 ```

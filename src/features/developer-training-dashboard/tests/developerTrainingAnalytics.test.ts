@@ -2,7 +2,6 @@ import {
   buildDeveloperTrainingSummary,
   formatTrainingDuration,
   formatTrainingHours,
-  formatTrainingHours as formatHours,
   collectFilterOptions,
   filterTrainingRecords,
 } from '../services/developerTrainingAnalytics';

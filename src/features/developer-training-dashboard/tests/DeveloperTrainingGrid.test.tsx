@@ -3,12 +3,7 @@ import { DeveloperTrainingGrid } from '../components/DeveloperTrainingGrid';
 import type { DeveloperTrainingSummary } from '../models/developerTrainingModels';
 
 jest.mock('@shared/components', () => ({
-  DataGrid: ({ data, columns, ariaLabel, sortable }: {
-    data: unknown[];
-    columns: unknown[];
-    ariaLabel: string;
-    sortable?: boolean;
-  }) => (
+  DataGrid: ({ data, ariaLabel }: { data: unknown[]; ariaLabel: string }) => (
     <table data-testid="data-grid" aria-label={ariaLabel}>
       <tbody>
         {(data as Array<{ developer: string; totalTrainingHours: number }>).map((row) => (
@@ -16,7 +11,7 @@ jest.mock('@shared/components', () => ({
             <td>{row.developer}</td>
             <td>{row.totalTrainingHours}h</td>
           </tr>
-        ))}
+        ))} 
       </tbody>
     </table>
   ),

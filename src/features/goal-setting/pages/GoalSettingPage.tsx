@@ -9,7 +9,7 @@ import { useGoalSetting } from '../hooks/useGoalSetting';
 import { GoalSettingToolbar } from '../components/GoalSettingToolbar';
 import { GoalSettingCardGrid } from '../components/GoalSettingCardGrid';
 import './GoalSettingPage.scss';
-import type { DeveloperGoalData } from '../models/goalModels';
+// DeveloperGoalData type not required in this file
 
 export const GoalSettingPage: React.FC = () => {
   const [selectedYear, setSelectedYear] = React.useState<number>(new Date().getFullYear());

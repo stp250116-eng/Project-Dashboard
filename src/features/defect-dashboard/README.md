@@ -7,6 +7,20 @@ time the page loads it pulls live data from the Jira saved filter
 **"GET ALM DEFECT"** (filter id `11471`) and lets the user slice the data by
 release, developer, and severity, then explore trends and distributions.
 
+## Jira Filter
+
+- **Filter name / ID:** GET ALM DEFECT — id `11471`
+- **JQL / Saved filter:** `filter = 11471` (requests made via `/jira/rest/api/3/search`)
+- **Purpose:** Primary defect set for the Defect Dashboard; used to compute severity, release, and developer analytics.
+- **Requested Jira fields:** `key`, `summary`, `assignee`, `reporter`, `fixVersions[]`, `customfield_10709` (severity), `customfield_11886` (root cause)
+- **Mapping rules:**
+  - `fixVersions[].name` → `release` (parsed like `v26.2.2`; fallback `No Release`)
+  - `customfield_10709` → `severity` (normalize from `.value`)
+  - `customfield_11886` → `rootCause` (from `.value`)
+- **Sample fixture:** `test/fixtures/jiraDefects.ts`
+- **Owner / cadence:** maintain the saved filter in Jira; page fetches live on each visit (paged requests, page size 100).
+
+
 ## Business Requirements
 
 - Pull real-time defects from the Jira filter **GET ALM DEFECT** on every visit

@@ -3,9 +3,8 @@ import { DeveloperTrainingCharts } from '../components/DeveloperTrainingCharts';
 import type { DeveloperTrainingSummary } from '../models/developerTrainingModels';
 
 jest.mock('@shared/components', () => ({
-  DataChart: ({ title, data, type, ariaLabel }: {
+  DataChart: ({ title, type, ariaLabel }: {
     title: string;
-    data: unknown;
     type: string;
     ariaLabel: string;
   }) => (
