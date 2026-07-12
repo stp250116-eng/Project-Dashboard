@@ -186,6 +186,8 @@ export const buildOverduePointSummary = (
         value: topRelease?.[0] ?? '—',
         unit: topRelease ? `${topRelease[1]} issues` : undefined,
       },
+      // include highest collaboration risk as a KPI so it appears in the KPI grid
+      collaborationRiskMetric(filtered),
     ],
     byDeveloper: toChartSeries(overdueCounts),
     byRelease: toChartSeries(releaseCounts),

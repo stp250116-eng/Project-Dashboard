@@ -14,7 +14,7 @@ const DashboardPage = (): JSX.Element => {
   const [showFilters, setShowFilters] = useState(false);
 
   return (
-    <div data-testid="dashboard-page">
+    <div data-testid="dashboard-page" className="dashboard-page">
       <header className="page-header">
         <h1 className="page-header__title">Dashboard</h1>
         <p className="page-header__subtitle">Executive summary across teams and Jira projects</p>

@@ -19,7 +19,7 @@ const DeveloperTrainingDashboardPage = (): JSX.Element => {
   const handleReset = useCallback(() => setFilters(EMPTY_DEVELOPER_TRAINING_FILTERS), []);
 
   return (
-    <div data-testid="developer-training-dashboard-page">
+    <div data-testid="developer-training-dashboard-page" className="developer-training-dashboard-page">
       <header className="page-header">
         <h1 className="page-header__title">Developer Training Dashboard</h1>
         <p className="page-header__subtitle">

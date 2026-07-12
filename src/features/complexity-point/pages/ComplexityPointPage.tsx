@@ -12,7 +12,7 @@ export const ComplexityPointPage = (): JSX.Element => {
   const handleReset = useCallback(() => setFilters(EMPTY_COMPLEXITY_FILTERS), []);
 
   return (
-    <div data-testid="complexity-point-page">
+    <div data-testid="complexity-point-page" className="complexity-point-page">
       <header className="page-header">
         <h1 className="page-header__title">Complexity Point</h1>
         <p className="page-header__subtitle">

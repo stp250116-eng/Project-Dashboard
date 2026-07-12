@@ -16,7 +16,7 @@
 
     h1 {
       margin: 0 0 0.5rem 0;
-      font-size: 2rem;
+      font-size: var(--page-header-title-size);
       font-weight: 700;
       color: var(--color-text-primary, #172b4d);
     }

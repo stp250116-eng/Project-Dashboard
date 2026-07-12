@@ -73,6 +73,7 @@ describe('overduePointAnalytics', () => {
       { id: 'total-delayed-parent-issues', label: 'Delayed Issues', value: 3 },
       { id: 'most-overdue-developer', label: 'Most Overdue Developer', value: 'Alice', unit: '2 points' },
       { id: 'most-impacted-release', label: 'Most Impacted Release', value: 'v1.0', unit: '2 issues' },
+      { id: 'highest-collaboration-risk', label: 'Highest Collaboration Risk', value: 'OO-1', unit: '2 developers' },
     ]);
   });
 

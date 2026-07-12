@@ -70,7 +70,19 @@ export const GoalSettingGrid: React.FC<GoalSettingGridProps> = ({
     const id = props.dataItem.developerId;
     return (
       <td>
-        <span data-developer-id={id} onClick={() => onRowClick?.(id)} className="developer-name">
+        <span
+          data-developer-id={id}
+          onClick={() => onRowClick?.(id)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              onRowClick?.(id);
+            }
+          }}
+          role="button"
+          tabIndex={0}
+          className="developer-name"
+        >
           {name}
         </span>
       </td>

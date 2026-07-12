@@ -18,7 +18,7 @@ const DefectDashboardPage = (): JSX.Element => {
   const handleReset = useCallback(() => setFilters(EMPTY_DEFECT_FILTERS), []);
 
   return (
-    <div data-testid="defect-dashboard-page">
+    <div data-testid="defect-dashboard-page" className="defect-dashboard-page">
       <header className="page-header">
         <h1 className="page-header__title">Defect Dashboard</h1>
         <p className="page-header__subtitle">

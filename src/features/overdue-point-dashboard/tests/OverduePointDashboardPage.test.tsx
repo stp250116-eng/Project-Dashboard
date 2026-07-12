@@ -36,6 +36,7 @@ const summary: OverduePointSummary = {
     { id: 'delayed-issues', label: 'Delayed Issues', value: 1 },
     { id: 'most-overdue-developer', label: 'Most Overdue Developer', value: 'Alice', unit: '2 points' },
     { id: 'most-impacted-release', label: 'Most Impacted Release', value: 'v1.0', unit: '1 issue' },
+    { id: 'highest-collaboration-risk', label: 'Highest Collaboration Risk', value: 'OO-1', unit: '1 developers' },
   ],
   byDeveloper: [{ category: 'Alice', value: 2 }],
   byRelease: [{ category: 'v1.0', value: 1 }],
@@ -44,17 +45,7 @@ const summary: OverduePointSummary = {
 const setResult = (overrides: Partial<ReturnType<typeof useOverduePointDashboard>>): void => {
   mockedUseOverduePointDashboard.mockReturnValue({
     summary,
-    analytics: {
-      kpis: [],
-      topDeveloper: { id: 'top-developer', label: 'Highest Overdue Point', value: 'Alice', unit: '2 points' },
-      topRelease: { id: 'top-release', label: 'Most Delayed Release', value: 'v1.0', unit: '1 issues' },
-      highestCollaborationRisk: {
-        id: 'highest-collaboration-risk',
-        label: 'Highest Collaboration Risk',
-        value: 'OO-1',
-        unit: '1 developers',
-      },
-    },
+    analytics: undefined,
     filters: { developers: [], releaseVersions: [] },
     setFilters: jest.fn(),
     isLoading: false,
@@ -93,7 +84,7 @@ describe('OverduePointDashboardPage', () => {
     expect(screen.getByLabelText('Delayed Issues')).toBeInTheDocument();
     expect(screen.getByLabelText('Most Overdue Developer')).toBeInTheDocument();
     expect(screen.getByLabelText('Most Impacted Release')).toBeInTheDocument();
-    expect(screen.getByLabelText('Highest Overdue Point')).toBeInTheDocument();
+    expect(screen.getByLabelText('Highest Collaboration Risk')).toBeInTheDocument();
   });
 
   it('renders the loading state when data is loading', () => {

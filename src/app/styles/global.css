@@ -1,5 +1,6 @@
 :root {
   --color-bg: #f4f5f7;
+  --page-header-title-size: 1.4rem;
   --color-surface: #ffffff;
   --color-border: #e1e4e8;
   --color-primary: #0052cc;
@@ -118,7 +119,13 @@ body,
 
 .page-header__title {
   margin: 0;
-  font-size: 1.4rem;
+  font-size: var(--page-header-title-size);
+}
+
+/* smaller section titles used inside panels */
+.section-title {
+  font-size: 1.1rem;
+  margin: 0 0 0.5rem 0;
 }
 
 .page-header__subtitle {
@@ -366,5 +373,19 @@ body,
   .panel-grid {
     grid-template-columns: 1fr;
   }
+}
+
+/* Page-level backgrounds: apply a soft background and spacing to feature pages
+   using their page wrapper classes (e.g. "goal-setting-page", "dashboard-page"). */
+[class$="-page"], [class*="-dashboard-page"] {
+  padding: 2rem;
+  min-height: calc(100vh - var(--header-height) - var(--footer-height));
+  background: linear-gradient(180deg, rgba(250,251,252,1) 0%, rgba(244,245,247,0.9) 100%);
+}
+
+/* Provide a subtle surface container inside pages to preserve the app shell padding */
+.page-content-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
