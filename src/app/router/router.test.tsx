@@ -11,11 +11,6 @@ const pageMock = (heading: string) => ({
 });
 
 jest.mock('@features/dashboard/pages/DashboardPage', () => pageMock('Dashboard'));
-jest.mock('@features/jira-overview/pages/JiraOverviewPage', () => pageMock('Jira Overview'));
-jest.mock('@features/sprint-board/pages/SprintBoardPage', () => pageMock('Sprint Board'));
-jest.mock('@features/release-dashboard/pages/ReleaseDashboardPage', () =>
-  pageMock('Release Dashboard'),
-);
 jest.mock('@features/defect-dashboard/pages/DefectDashboardPage', () =>
   pageMock('Defect Dashboard'),
 );
@@ -28,8 +23,7 @@ jest.mock('@features/developer-training-dashboard/pages/DeveloperTrainingDashboa
 jest.mock('@features/overdue-point-dashboard/pages/OverduePointDashboardPage', () =>
   pageMock('Overdue Point Dashboard'),
 );
-jest.mock('@features/team-capacity/pages/TeamCapacityPage', () => pageMock('Team Capacity'));
-jest.mock('@features/reports/pages/ReportsPage', () => pageMock('Reports'));
+jest.mock('@features/goal-setting/pages/GoalSettingPage', () => pageMock('Goal Setting'));
 
 import { router } from './router';
 
@@ -50,15 +44,11 @@ describe('router', () => {
     await screen.findByRole('heading', { name: 'Dashboard', level: 1 });
 
     const routesToVisit: ReadonlyArray<readonly [string, string]> = [
-      ['/jira-overview', 'Jira Overview'],
-      ['/sprint-board', 'Sprint Board'],
-      ['/release-dashboard', 'Release Dashboard'],
       ['/defect-dashboard', 'Defect Dashboard'],
       ['/complexity-point', 'Complexity Point'],
       ['/developer-training-dashboard', 'Developer Training Dashboard'],
       ['/overdue-point-dashboard', 'Overdue Point Dashboard'],
-      ['/team-capacity', 'Team Capacity'],
-      ['/reports', 'Reports'],
+      ['/goal-setting', 'Goal Setting'],
     ];
 
     for (const [path, heading] of routesToVisit) {

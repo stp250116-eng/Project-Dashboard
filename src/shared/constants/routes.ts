@@ -1,16 +1,15 @@
 export const ROUTES = {
   root: '/',
   dashboard: '/dashboard',
-  jiraOverview: '/jira-overview',
-  sprintBoard: '/sprint-board',
-  releaseDashboard: '/release-dashboard',
+  // sprintBoard: '/sprint-board', (removed)
+  // releaseDashboard: '/release-dashboard', (removed)
   defectDashboard: '/defect-dashboard',
   complexityPoint: '/complexity-point',
   developerTrainingDashboard: '/developer-training-dashboard',
   overduePointDashboard: '/overdue-point-dashboard',
-  teamCapacity: '/team-capacity',
+  // teamCapacity: '/team-capacity', (removed)
   goalSetting: '/goal-setting',
-  reports: '/reports',
+  // reports: '/reports', (removed)
 } as const;
 
 export type AppRoute = (typeof ROUTES)[keyof typeof ROUTES];

@@ -44,11 +44,20 @@ See [docs/architecture.md](docs/architecture.md). Summary:
 ```
 src/
 ├── app/            # shell: layouts, providers, router, styles
-├── features/       # dashboard, jira-overview, sprint-board, …
+├── features/       # dashboard, defect-dashboard, complexity-point,
+│                  # developer-training-dashboard, goal-setting,
+│                  # overdue-point-dashboard
 ├── integrations/   # jira
 ├── shared/         # api, components, hooks, services, constants, types
 └── main.tsx
 ```
+
+### Removed features
+
+- The following feature modules were removed in the recent refactor and
+   their routes, pages, and tests were deleted: `jira-overview`,
+   `sprint-board`, `release-dashboard`, `team-capacity`, and `reports`.
+   See `docs/changelog.md` for details and migration notes.
 
 ## Documentation
 

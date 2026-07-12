@@ -11,18 +11,17 @@ describe('SideNav', () => {
     );
     expect(screen.getByRole('navigation', { name: 'Primary' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Dashboard' })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Reports' })).toBeInTheDocument();
-    expect(screen.getAllByRole('link')).toHaveLength(11);
+    expect(screen.getByRole('link', { name: 'Defect Dashboard' })).toBeInTheDocument();
+    expect(screen.getAllByRole('link')).toHaveLength(6);
   });
 
   it('marks the link for the active route and leaves the others inactive', () => {
     render(
-      <MemoryRouter initialEntries={['/reports']}>
+      <MemoryRouter initialEntries={['/defect-dashboard']}>
         <SideNav />
       </MemoryRouter>,
     );
-
-    expect(screen.getByRole('link', { name: 'Reports' })).toHaveClass(
+    expect(screen.getByRole('link', { name: 'Defect Dashboard' })).toHaveClass(
       'app-sidenav__link--active',
     );
     expect(screen.getByRole('link', { name: 'Dashboard' })).not.toHaveClass(

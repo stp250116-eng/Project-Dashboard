@@ -97,9 +97,11 @@ All notable changes to this project are documented here. Format loosely follows
     `FilterPanel`, plus `StateView` for the four UI states.
 - Jira integration scaffolding (`jiraApi`, `jiraQueries`, `jiraMapper`,
   `jiraTypes`, `jiraConstants`, README).
-- Feature modules: dashboard, jira-overview, sprint-board, release-dashboard,
-  defect-dashboard, team-capacity, reports — each with pages, hooks, models,
-  tests, and README.
+- Feature modules: dashboard, defect-dashboard, complexity-point,
+  developer-training-dashboard, overdue-point-dashboard, goal-setting — each
+  with pages, hooks, models, tests, and README. (Several smaller features
+  such as `jira-overview`, `sprint-board`, `release-dashboard`, `team-capacity`,
+  and `reports` were removed in a recent refactor.)
 
 ### Goal Setting
 
