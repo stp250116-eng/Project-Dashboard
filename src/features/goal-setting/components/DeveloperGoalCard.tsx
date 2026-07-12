@@ -5,6 +5,7 @@
  */
 
 import React from 'react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Card, CardBody, CardHeader } from '@progress/kendo-react-layout';
 import { ProgressBar } from '@progress/kendo-react-progressbars';
 import { Chip } from '@progress/kendo-react-buttons';

@@ -123,7 +123,9 @@ export const GoalSettingToolbar: React.FC<GoalSettingToolbarProps> = ({
 
       {/* Sort Options */}
       <div>
-        <label
+        <div
+          role="heading"
+          aria-level={3}
           style={{
             display: 'block',
             fontSize: '12px',
@@ -135,8 +137,8 @@ export const GoalSettingToolbar: React.FC<GoalSettingToolbarProps> = ({
           }}
         >
           Sort By
-        </label>
-        <div style={{ width: '100%', display: 'flex', gap: '4px' }}>
+        </div>
+        <div style={{ width: '100%', display: 'flex', gap: '4px' }} aria-label="Sort By">
           <ButtonGroup>
           <Button
             togglable={true}

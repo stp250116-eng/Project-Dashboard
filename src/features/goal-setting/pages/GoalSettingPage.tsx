@@ -57,9 +57,8 @@ export const GoalSettingPage: React.FC = () => {
     return filtered;
   }, [data, searchText, sortBy]);
 
-  const handleSelectDeveloper = (developerId: string) => {
+  const handleSelectDeveloper = (_developerId: string) => {
     // TODO: Navigate to developer detail page or open modal
-    console.log('Selected developer:', developerId);
   };
 
   return (

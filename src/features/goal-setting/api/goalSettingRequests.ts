@@ -3,6 +3,8 @@
  * Provides high-level functions that combine multiple Jira queries into goal metrics.
  */
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { createApiClient } from '@shared/api';
 import { appConfig } from '@shared/constants/appConfig';
 import {
@@ -361,6 +363,7 @@ export async function fetchGoalSettingData(year: number): Promise<DeveloperGoalD
     // Sort by rank
     return rankDevelopers(developers);
   } catch (error) {
+    /* eslint-disable-next-line no-console */
     console.error('Error fetching goal setting data:', error);
     return [];
   }

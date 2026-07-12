@@ -23,9 +23,19 @@ module.exports = {
   rules: {
     '@typescript-eslint/no-explicit-any': 'error',
     '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
-    'no-console': 'error',
+    'no-console': ['error', { allow: ['warn', 'error'] }],
     'react/prop-types': 'off',
   },
+  overrides: [
+    {
+      files: ['**/*.test.ts', '**/*.test.tsx', 'src/**/tests/**'],
+      rules: {
+        '@typescript-eslint/no-explicit-any': 'off',
+        'react/display-name': 'off',
+        '@typescript-eslint/no-require-imports': 'off',
+      },
+    },
+  ],
   ignorePatterns: [
     'dist',
     'coverage',

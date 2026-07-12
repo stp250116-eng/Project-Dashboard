@@ -15,10 +15,10 @@ export const registerInterceptors = (client: AxiosInstance): void => {
       if (token) {
         config.headers.set('Authorization', `Bearer ${token}`);
       }
-      const correlationId =
-        typeof crypto !== 'undefined' && typeof (crypto as any).randomUUID === 'function'
-          ? (crypto as any).randomUUID()
-          : generateUUIDv4();
+      const maybeCrypto = (globalThis as unknown as { crypto?: { randomUUID?: () => string } }).crypto;
+      const correlationId = maybeCrypto && typeof maybeCrypto.randomUUID === 'function'
+        ? maybeCrypto.randomUUID()
+        : generateUUIDv4();
       config.headers.set('X-Correlation-Id', correlationId);
       return config;
     },

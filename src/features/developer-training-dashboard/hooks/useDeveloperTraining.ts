@@ -39,9 +39,9 @@ export const useDeveloperTraining = (
     if (query.error instanceof Error) return query.error;
     // Coerce unknown errors into an Error with a sensible message
     try {
-      const maybeMessage = (query.error as any)?.message ?? String(query.error);
-      return new Error(maybeMessage);
-    } catch (e) {
+      const maybeMessage = (query.error as unknown as { message?: unknown })?.message ?? String(query.error);
+      return new Error(String(maybeMessage));
+    } catch {
       return new Error('Unknown error');
     }
   })();

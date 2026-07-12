@@ -66,8 +66,6 @@ export function calculateGoalStatus(
   
     // Special-case: High-Level Defect Rate bespoke bands
     if (goalId === 'defectHigh') {
-              console.log(`calculateGoalStatus: goalId=${goalId}, actual=${actual}, targetOrThreshold=${targetOrThreshold}`);
-
       // Product rule:
       // - Passing threshold: 5%
       // - on-track: defectRate% < 3%
