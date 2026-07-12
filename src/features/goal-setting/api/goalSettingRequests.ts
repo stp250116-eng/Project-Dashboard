@@ -28,7 +28,7 @@ async function fetchAllJiraIssues(jql: string, fields: string[] = []): Promise<a
   const allIssues: any[] = [];
 
   do {
-    const { data } = await jiraClient.get<any>(JIRA_ENDPOINTS.search, {
+    const resp = await jiraClient.get<any>(JIRA_ENDPOINTS.search, {
       params: {
         jql,
         maxResults: pageSize,
@@ -37,6 +37,7 @@ async function fetchAllJiraIssues(jql: string, fields: string[] = []): Promise<a
       },
     });
 
+    const data = resp?.data;
     if (data?.issues?.length) allIssues.push(...data.issues);
     nextPageToken = data?.isLast ? undefined : data?.nextPageToken;
   } while (nextPageToken);

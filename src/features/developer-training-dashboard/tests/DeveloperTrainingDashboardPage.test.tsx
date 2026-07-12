@@ -111,10 +111,10 @@ describe('DeveloperTrainingDashboardPage', () => {
 
   it('renders the page subtitle', () => {
     renderPage();
-    const subtitle = screen.getByRole('contentinfo', { hidden: true })?.parentElement?.querySelector('.page-header__subtitle');
+    const subtitle = screen.getByText(/Live training hours analytics from Jira filter/i);
     expect(subtitle).toBeInTheDocument();
-    expect(subtitle?.textContent).toContain('Live training hours analytics from Jira filter');
-    expect(subtitle?.textContent).toContain('[OO] - GET TRAINING INFORMATION');
+    expect(subtitle.textContent).toContain('Live training hours analytics from Jira filter');
+    expect(subtitle.textContent).toContain('[OO] - GET TRAINING INFORMATION');
   });
 
   it('renders the page container with correct test id', () => {

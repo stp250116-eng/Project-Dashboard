@@ -162,10 +162,9 @@ export function calculateOverallScore(developer: DeveloperGoalData): number {
  * Mutates the input array's rank field.
  */
 export function rankDevelopers(developers: DeveloperGoalData[]): DeveloperGoalData[] {
-  // Only Senior and Junior Developers are considered for ranking.
-  // High-level roles (e.g., managers, support, etc.) are displayed but excluded
-  // from the rank calculation and moved to the end of the returned list with rank 0.
-  const rankingRoles = new Set(['Senior Developer', 'Junior Developer']);
+  // By default rank Developers and Senior/Junior roles. Non-developer roles
+  // (managers, support, etc.) are moved to the end with rank 0.
+  const rankingRoles = new Set(['Senior Developer', 'Junior Developer', 'Engineer']);
 
   const rankingCandidates = developers.filter((d) => rankingRoles.has(d.role));
   const others = developers.filter((d) => !rankingRoles.has(d.role));

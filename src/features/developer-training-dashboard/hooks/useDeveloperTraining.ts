@@ -34,11 +34,23 @@ export const useDeveloperTraining = (
     return buildDeveloperTrainingSummary(query.data, filters);
   }, [filters, query.data]);
 
+  const normalizedError: Error | null = (() => {
+    if (!query.error) return null;
+    if (query.error instanceof Error) return query.error;
+    // Coerce unknown errors into an Error with a sensible message
+    try {
+      const maybeMessage = (query.error as any)?.message ?? String(query.error);
+      return new Error(maybeMessage);
+    } catch (e) {
+      return new Error('Unknown error');
+    }
+  })();
+
   return {
     summary,
     isLoading: query.isLoading,
     isError: query.isError,
     isEmpty: !query.isLoading && !query.isError && (query.data?.length ?? 0) === 0,
-    error: query.error ?? null,
+    error: normalizedError,
   };
 };
