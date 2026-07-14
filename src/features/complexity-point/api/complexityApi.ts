@@ -5,11 +5,17 @@ import type { RawJiraIssue, RawJiraSearchResponse } from '@integrations/jira/jir
 import type { ComplexityRecord } from '../models/complexityModels';
 import { getComplexityValueFromFields } from '../services/complexityAnalytics';
 
-const mapComplexityIssue = (issue: RawJiraIssue): ComplexityRecord => ({
-  assignee: issue.fields.assignee?.displayName ?? 'Unassigned',
-  accountId: issue.fields.assignee?.accountId ?? null,
-  complexity: getComplexityValueFromFields(issue.fields as Record<string, unknown>),
-});
+const mapComplexityIssue = (issue: RawJiraIssue): ComplexityRecord => {
+  const assignee = issue.fields.assignee?.displayName ?? 'Unassigned';
+  const accountId = issue.fields.assignee?.accountId;
+  const complexity = getComplexityValueFromFields(issue.fields as Record<string, unknown>);
+
+  const base: ComplexityRecord = { assignee, complexity };
+  if (typeof accountId === 'string' && accountId.length > 0) {
+    base.accountId = accountId;
+  }
+  return base;
+};
 
 export const complexityApi = {
   async getComplexityPoints(): Promise<ComplexityRecord[]> {

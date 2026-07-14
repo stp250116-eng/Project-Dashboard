@@ -23,6 +23,7 @@ export const teamGoalService = {
     const records: ComplexityRecord[] = await complexityApi.getComplexityPoints();
 
     const byAccount = new Map<string, DeveloperThroughput>();
+    const excludedIds = TEAM_GOAL.excludedAccountIds as readonly string[];
 
     for (const r of records) {
       const account = r.accountId ?? r.assignee ?? 'unknown';
@@ -34,7 +35,7 @@ export const teamGoalService = {
           assignee: r.assignee,
           accountId: r.accountId ?? null,
           complexity: r.complexity,
-          excluded: TEAM_GOAL.excludedAccountIds.includes(r.accountId ?? ''),
+          excluded: r.accountId ? excludedIds.includes(r.accountId) : false,
         });
       }
     }
@@ -45,7 +46,8 @@ export const teamGoalService = {
     const teamThroughput = includedRows.reduce((s, r) => s + r.complexity, 0);
     const includedDeveloperCount = includedRows.length;
     const teamTarget = includedDeveloperCount * TEAM_GOAL.perDeveloperTarget;
-    const pass = teamThroughput >= teamTarget;
+    // Passing rule: each included developer must strictly exceed the per-developer target
+    const pass = includedRows.length > 0 && includedRows.every((r) => r.complexity > TEAM_GOAL.perDeveloperTarget);
 
     return {
       rows,

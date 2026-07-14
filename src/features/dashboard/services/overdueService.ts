@@ -1,11 +1,5 @@
 import { jiraApi } from '@integrations/jira/jiraApi';
-import { TEAM_GOAL } from '../constants';
-
-interface RawIssue {
-  id: string;
-  key: string;
-  fields: Record<string, any>;
-}
+import type { RawJiraIssue } from '@integrations/jira/jiraTypes';
 
 export interface OverdueSummary {
   overdueEpicCount: number;
@@ -21,8 +15,8 @@ export interface OverdueSummary {
 export const overdueService = {
   async fetchOverdueSummary(): Promise<OverdueSummary> {
     // Helper: fetch all issues for a given saved filter and collect parent keys (handles pagination)
-    const overdueRecords = await jiraApi.fetchAllIssues(`filter = ${13525}`, 'assignee,parent');
-    const allRecords = await jiraApi.fetchAllIssues(`filter = ${13725}`, 'assignee,parent');
+    const overdueRecords = await jiraApi.fetchAllIssues<RawJiraIssue>(`filter = ${13525}`, 'assignee,parent');
+    const allRecords = await jiraApi.fetchAllIssues<RawJiraIssue>(`filter = ${13725}`, 'assignee,parent');
 
     const overdueParents = new Set<string>();
     for (const issue of overdueRecords ?? []) {

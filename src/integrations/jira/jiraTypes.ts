@@ -73,7 +73,7 @@ export interface RawJiraIssue {
   fields: {
     summary: string;
     status: { name: string; statusCategory: { key: string } };
-    assignee: { displayName: string } | null;
+    assignee: { displayName: string; accountId?: string } | null;
     priority: { name: string } | null;
     issuetype: { name: string };
     created: string;

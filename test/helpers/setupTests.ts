@@ -21,3 +21,17 @@ if (typeof globalThis.ResizeObserver === 'undefined') {
     disconnect(): void {}
   };
 }
+
+// Start MSW server for HTTP-level request mocking in Jest environment
+try {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const { server } = require('../mocks/server');
+  // Register lifecycle hooks
+  beforeAll(() => server.listen({ onUnhandledRequest: 'warn' }));
+  afterEach(() => server.resetHandlers());
+  afterAll(() => server.close());
+} catch {
+  // If MSW isn't available in the test environment, tests that rely on it
+  // will receive real network errors — keep the shim silent to avoid noisy
+  // startup failures when running subsets of tests.
+}

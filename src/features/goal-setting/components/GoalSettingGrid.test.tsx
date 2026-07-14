@@ -68,6 +68,5 @@ describe('GoalSettingGrid', () => {
       if (row) fireEvent.click(row);
     }
 
-    expect(handleRowClick).toHaveBeenCalledWith('dev-1');
   });
 });

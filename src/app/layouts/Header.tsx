@@ -7,7 +7,7 @@ export const Header = (): JSX.Element => {
     try {
       const saved = localStorage.getItem('theme');
       return (saved as 'light' | 'dark') || 'light';
-    } catch (e) {
+    } catch {
       return 'light';
     }
   });
@@ -21,7 +21,7 @@ export const Header = (): JSX.Element => {
     }
     try {
       localStorage.setItem('theme', theme);
-    } catch (e) {
+    } catch {
       // ignore
     }
   }, [theme]);

@@ -10,7 +10,7 @@ interface RawIssueAssignee {
 interface RawIssue {
   id: string;
   key: string;
-  fields: Record<string, any> & { assignee?: RawIssueAssignee | null };
+  fields: Record<string, unknown> & { assignee?: RawIssueAssignee | null };
 }
 
 export interface DefectRow {
@@ -28,7 +28,7 @@ export interface DefectSummary {
 const readSeverity = (raw: unknown): string | null => {
   if (!raw) return null;
   if (typeof raw === 'string') return raw;
-  if (typeof raw === 'object' && raw !== null && 'value' in (raw as any)) return String((raw as any).value || null);
+  if (typeof raw === 'object' && raw !== null && 'value' in raw) return String(((raw as { value?: unknown }).value ?? null));
   return null;
 };
 
@@ -43,9 +43,10 @@ const normalizeSeverity = (value: string | null): 'critical' | 'high' | 'medium'
 
 export const defectService = {
   async fetchDefectSummary(): Promise<DefectSummary> {
-    const issues: RawIssue[] = await jiraApi.fetchAllIssues(`filter = ${JIRA_DEFECT_FILTER.id}`, JIRA_DEFECT_REQUEST_FIELDS.join(','));
+    const issues: RawIssue[] = await jiraApi.fetchAllIssues<RawIssue>(`filter = ${JIRA_DEFECT_FILTER.id}`, JIRA_DEFECT_REQUEST_FIELDS.join(','));
 
     const rowsMap = new Map<string, DefectRow>();
+    const excludedIds = TEAM_GOAL.excludedAccountIds as readonly string[];
 
     for (const issue of issues ?? []) {
       const assignee = issue.fields?.assignee ?? null;
@@ -65,7 +66,7 @@ export const defectService = {
           developer: dev,
           accountId: accountId ?? null,
           counts: { low: 0, medium: 0, high: 0, critical: 0 },
-          excluded: TEAM_GOAL.excludedAccountIds.includes(accountId ?? ''),
+          excluded: accountId ? excludedIds.includes(accountId) : false,
         };
         row.counts[severity] = 1;
         rowsMap.set(key, row);

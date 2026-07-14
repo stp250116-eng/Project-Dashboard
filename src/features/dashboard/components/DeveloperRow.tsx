@@ -1,5 +1,3 @@
-import React from 'react';
-
 interface Props {
   assignee: string;
   accountId?: string | null;

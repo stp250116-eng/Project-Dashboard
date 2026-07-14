@@ -25,9 +25,7 @@ export const DeveloperGoalCard: React.FC<DeveloperGoalCardProps> = ({
   developer,
   onSelectDeveloper,
 }) => {
-  const getStatusClass = (status: 'on-track' | 'at-risk' | 'off-track'): string => {
-    return `status-${status}`;
-  };
+  // status CSS helper removed (unused) — keep styling in CSS modules
 
   const getRankBadgeClass = (rank: number): string => {
     if (rank === 1) return 'rank-badge--first';

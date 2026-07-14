@@ -21,13 +21,14 @@ export const upskillingService = {
     const raw = await developerTrainingApi.getTrainingRecords();
 
     const byAccount = new Map<string, UpskillingRow>();
+    const excludedIds = TEAM_GOAL.excludedAccountIds as readonly string[];
 
     for (const rec of raw) {
-      const assignee = (rec.fields.assignee as any) ?? null;
+      const assignee = (rec.fields?.assignee ?? null) as { accountId?: string; displayName?: string } | null;
       const accountId = assignee?.accountId ?? null;
       const displayName = assignee?.displayName ?? 'Unassigned';
-      const secs = (rec.fields.aggregatetimespent ?? 0) as number;
-      const hours = Math.round(((secs ?? 0) / 3600) * 100) / 100;
+      const secs = Number(rec.fields?.aggregatetimespent ?? 0);
+      const hours = Math.round((secs / 3600) * 100) / 100;
 
       const key = accountId ?? displayName;
       const existing = byAccount.get(key);
@@ -38,7 +39,7 @@ export const upskillingService = {
           developer: displayName,
           accountId,
           totalTrainingHours: hours,
-          excluded: TEAM_GOAL.excludedAccountIds.includes(accountId ?? ''),
+          excluded: accountId ? excludedIds.includes(accountId) : false,
         });
       }
     }

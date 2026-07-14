@@ -29,15 +29,15 @@ const jiraClient = createApiClient(appConfig.jiraApiBase);
 
 export const jiraApi = {
   /** Generic helper: fetch all matching issues for a JQL using enhanced search pagination or startAt pagination. */
-  async fetchAllIssues(jql: string, fields = '*navigable', pageSize = JIRA_DEFAULT_MAX_RESULTS) {
-    const records: any[] = [];
+  async fetchAllIssues<T = RawJiraIssue>(jql: string, fields = '*navigable', pageSize = JIRA_DEFAULT_MAX_RESULTS): Promise<T[]> {
+    const records: T[] = [];
     let nextPageToken: string | undefined;
 
     // Try enhanced search (cursor-based) first. If server doesn't return cursor fields,
     // fall back to classic startAt/total paging.
     try {
       do {
-        const { data } = await jiraClient.get<RawJiraSearchResponse>(JIRA_ENDPOINTS.search, {
+        const { data } = await jiraClient.get<RawJiraSearchResponse<T>>(JIRA_ENDPOINTS.search, {
           params: {
             jql,
             maxResults: pageSize,
@@ -53,12 +53,12 @@ export const jiraApi = {
           throw new Error('no-cursor');
         }
       } while (nextPageToken);
-    } catch (err) {
-      // fallback to startAt pagination
+    } catch {
+      // fallback to classic startAt/total pagination
       let startAt = 0;
       let total = Number.POSITIVE_INFINITY;
       while (startAt < total) {
-        const { data } = await jiraClient.get<any>(JIRA_ENDPOINTS.search, {
+        const { data } = await jiraClient.get<RawJiraSearchResponse<T> & { total?: number; maxResults?: number }>(JIRA_ENDPOINTS.search, {
           params: { jql, startAt, maxResults: pageSize, fields },
         });
         records.push(...(data.issues ?? []));

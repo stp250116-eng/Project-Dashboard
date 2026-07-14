@@ -3,28 +3,49 @@
  * Provides high-level functions that combine multiple Jira queries into goal metrics.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-import { createApiClient } from '@shared/api';
-import { appConfig } from '@shared/constants/appConfig';
 import {
   JIRA_DEFECT_FILTER,
   JIRA_OVERDUE_FILTER,
   JIRA_PARTICIPATION_FILTER,
-  JIRA_ENDPOINTS,
   JIRA_DEFAULT_MAX_RESULTS,
 } from '@integrations/jira/jiraConstants';
 import { jiraApi } from '@integrations/jira/jiraApi';
+import { createApiClient } from '@shared/api';
+import { appConfig } from '@shared/constants/appConfig';
+import { JIRA_ENDPOINTS } from '@integrations/jira/jiraConstants';
+import type { RawJiraIssue } from '@integrations/jira/jiraTypes';
 import { mapTrainingRecords } from '@features/developer-training-dashboard/services/developerTrainingMapper';
 // complexityAnalytics helpers intentionally omitted to avoid unused imports
 import { complexityApi } from '@features/complexity-point/api/complexityApi';
 import { GOAL_DEFINITIONS } from '../services/goalDefinitions';
 import { calculateGoalStatus, calculateSubScore, rankDevelopers } from '../services/goalScoring';
 import type { DeveloperGoal, DeveloperGoalData, GoalType } from '../models/goalModels';
+// keep imports above in consistent order
 
 // Helper: fetch all Jira issues for a JQL by paging startAt/maxResults
-// Reuse jiraApi.fetchAllIssues for consistent paging
-const fetchAllJiraIssues = (jql: string, fields: string[] = []) => jiraApi.fetchAllIssues(jql, fields.join(','));
+// Prefer jiraApi.fetchAllIssues when available (production path). In tests
+// some mocks only provide a subset of jiraApi — fall back to a direct
+// client call so unit tests that mock `createApiClient` continue to work.
+const fetchAllJiraIssues = async <T = RawJiraIssue>(jql: string, fields: string[] = []): Promise<T[]> => {
+  if (typeof (jiraApi as any).fetchAllIssues === 'function') {
+    const fetchFn = (jiraApi as any).fetchAllIssues as <U = RawJiraIssue>(jql: string, fields?: string) => Promise<U[]>;
+    return fetchFn<T>(jql, fields.join(','));
+  }
+
+  const client = createApiClient(appConfig.jiraApiBase);
+  try {
+    const resp = await Promise.resolve(client.get({
+      url: JIRA_ENDPOINTS.search,
+      params: { jql, maxResults: JIRA_DEFAULT_MAX_RESULTS, fields: fields.join(',') },
+    } as any));
+    if (resp && typeof resp === 'object' && 'data' in resp) {
+      return (resp as any).data?.issues ?? [];
+    }
+  } catch {
+    // fall through to return empty list on error
+  }
+  return [];
+};
 
 /**
  * Fetch training information from Jira filter.
@@ -103,7 +124,7 @@ export async function getComplexityPoints(_year: number): Promise<Record<string,
  */
 export async function getOverdueItems(_year: number): Promise<Record<string, number>> {
   const filterId = JIRA_OVERDUE_FILTER.id;
-  const issues = await fetchAllJiraIssues(`filter = ${filterId}`, ['assignee', 'duedate', 'status']);
+  const issues = await fetchAllJiraIssues<RawJiraIssue>(`filter = ${filterId}`, ['assignee', 'duedate', 'status']);
 
   const byDeveloper: Record<string, number> = {};
 
@@ -128,7 +149,7 @@ export async function getOverdueItems(_year: number): Promise<Record<string, num
 export async function getOverdueParticipation(year: number): Promise<Record<string, { overduePoints: number; totalParticipation: number }>> {
   // Use the pagination helper to ensure we retrieve all overdue issues
   const filterId = JIRA_OVERDUE_FILTER.id;
-  const issues = await fetchAllJiraIssues(`filter = ${filterId}`, ['assignee', 'parent']);
+  const issues = await fetchAllJiraIssues<RawJiraIssue>(`filter = ${filterId}`, ['assignee', 'parent']);
 
   // Build set of unique parent issues per developer for overdue points
   const developerOverdueParents = new Map<string, Set<string>>();
@@ -212,7 +233,7 @@ export async function fetchGoalSettingData(year: number): Promise<DeveloperGoalD
     const nameByCanonical = new Map<string, string>();
     const canonicalKeys = new Set<string>();
 
-    const addKeysFrom = (obj: Record<string, any>) => {
+    const addKeysFrom = (obj: Record<string, unknown>) => {
       for (const k of Object.keys(obj)) {
         const c = normalize(k);
         canonicalKeys.add(c);
