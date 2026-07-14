@@ -7,6 +7,7 @@ import { getComplexityValueFromFields } from '../services/complexityAnalytics';
 
 const mapComplexityIssue = (issue: RawJiraIssue): ComplexityRecord => ({
   assignee: issue.fields.assignee?.displayName ?? 'Unassigned',
+  accountId: issue.fields.assignee?.accountId ?? null,
   complexity: getComplexityValueFromFields(issue.fields as Record<string, unknown>),
 });
 

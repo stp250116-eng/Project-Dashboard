@@ -54,7 +54,7 @@ export const Header = (): JSX.Element => {
             )}
           </button>
         </div>
-        <span className="app-header__user" aria-label="Current user">
+        <span className="app-header__user" aria-label="Current user" style={{ display: 'none' }}>
           Signed in
         </span>
       </div>

@@ -23,29 +23,8 @@ import { calculateGoalStatus, calculateSubScore, rankDevelopers } from '../servi
 import type { DeveloperGoal, DeveloperGoalData, GoalType } from '../models/goalModels';
 
 // Helper: fetch all Jira issues for a JQL by paging startAt/maxResults
-async function fetchAllJiraIssues(jql: string, fields: string[] = []): Promise<any[]> {
-  const jiraClient = createApiClient(appConfig.jiraApiBase);
-  const pageSize = 100; // preferred page size
-  let nextPageToken: string | undefined;
-  const allIssues: any[] = [];
-
-  do {
-    const resp = await jiraClient.get<any>(JIRA_ENDPOINTS.search, {
-      params: {
-        jql,
-        maxResults: pageSize,
-        fields: fields.join(','),
-        ...(nextPageToken ? { nextPageToken } : {}),
-      },
-    });
-
-    const data = resp?.data;
-    if (data?.issues?.length) allIssues.push(...data.issues);
-    nextPageToken = data?.isLast ? undefined : data?.nextPageToken;
-  } while (nextPageToken);
-
-  return allIssues;
-}
+// Reuse jiraApi.fetchAllIssues for consistent paging
+const fetchAllJiraIssues = (jql: string, fields: string[] = []) => jiraApi.fetchAllIssues(jql, fields.join(','));
 
 /**
  * Fetch training information from Jira filter.

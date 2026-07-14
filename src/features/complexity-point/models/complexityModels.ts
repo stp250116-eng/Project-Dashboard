@@ -1,5 +1,6 @@
 export interface ComplexityRecord {
   assignee: string;
+  accountId?: string | null;
   complexity: number;
 }
 

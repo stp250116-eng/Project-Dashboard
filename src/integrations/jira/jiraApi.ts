@@ -28,6 +28,48 @@ import { mapJiraIssues, mapJiraDefects } from './jiraMapper';
 const jiraClient = createApiClient(appConfig.jiraApiBase);
 
 export const jiraApi = {
+  /** Generic helper: fetch all matching issues for a JQL using enhanced search pagination or startAt pagination. */
+  async fetchAllIssues(jql: string, fields = '*navigable', pageSize = JIRA_DEFAULT_MAX_RESULTS) {
+    const records: any[] = [];
+    let nextPageToken: string | undefined;
+
+    // Try enhanced search (cursor-based) first. If server doesn't return cursor fields,
+    // fall back to classic startAt/total paging.
+    try {
+      do {
+        const { data } = await jiraClient.get<RawJiraSearchResponse>(JIRA_ENDPOINTS.search, {
+          params: {
+            jql,
+            maxResults: pageSize,
+            fields,
+            ...(nextPageToken ? { nextPageToken } : {}),
+          },
+        });
+        records.push(...(data.issues ?? []));
+        if (typeof data.isLast === 'boolean') {
+          nextPageToken = data.isLast ? undefined : data.nextPageToken;
+        } else {
+          // server didn't use enhanced cursor model; throw to use fallback paging path
+          throw new Error('no-cursor');
+        }
+      } while (nextPageToken);
+    } catch (err) {
+      // fallback to startAt pagination
+      let startAt = 0;
+      let total = Number.POSITIVE_INFINITY;
+      while (startAt < total) {
+        const { data } = await jiraClient.get<any>(JIRA_ENDPOINTS.search, {
+          params: { jql, startAt, maxResults: pageSize, fields },
+        });
+        records.push(...(data.issues ?? []));
+        total = typeof data.total === 'number' ? data.total : total;
+        startAt += data.maxResults || pageSize;
+      }
+    }
+
+    return records;
+  },
+
   /** Search issues via JQL and return mapped domain models. */
   async searchIssues(jql: string, maxResults = JIRA_DEFAULT_MAX_RESULTS): Promise<JiraIssue[]> {
     const { data } = await jiraClient.get<RawJiraSearchResponse>(JIRA_ENDPOINTS.search, {

@@ -1,17 +1,16 @@
-import { useState } from 'react';
-import { useDashboardSummary } from '../hooks/useDashboardSummary';
-import { RecentActivity } from '../components/RecentActivity';
-import {
-  KpiCard,
-  DataChart,
-  FilterPanel,
-  StateView,
-} from '@shared/components';
+import { useTeamGoal } from '../hooks/useTeamGoal';
+import { useUpskilling } from '../hooks/useUpskilling';
+import { useDefects } from '../hooks/useDefects';
+import { useOverdue } from '../hooks/useOverdue';
+import { TeamGoalSummary } from '../components/TeamGoalSummary';
+import { StateView } from '@shared/components';
 
 /** Executive dashboard landing page. */
 const DashboardPage = (): JSX.Element => {
-  const { data, isLoading, isError, error } = useDashboardSummary();
-  const [showFilters, setShowFilters] = useState(false);
+  const { data, isLoading, isError, error } = useTeamGoal();
+  const { data: upskillingData } = useUpskilling();
+  const { data: defectsData } = useDefects();
+  const { data: overdueData } = useOverdue();
 
   return (
     <div data-testid="dashboard-page" className="dashboard-page">
@@ -20,15 +19,7 @@ const DashboardPage = (): JSX.Element => {
         <p className="page-header__subtitle">Executive summary across teams and Jira projects</p>
       </header>
 
-      <FilterPanel
-        title="Quick Filters"
-        onApply={() => setShowFilters(true)}
-        onReset={() => setShowFilters(false)}
-      >
-        <p className="page-header__subtitle">
-          {showFilters ? 'Filters applied.' : 'Refine by project, team, or date range.'}
-        </p>
-      </FilterPanel>
+      {/* Quick Filters removed per feature update */}
 
       <StateView
         isLoading={isLoading}
@@ -37,20 +28,7 @@ const DashboardPage = (): JSX.Element => {
         isEmpty={!isLoading && !isError && !data}
       >
         {data ? (
-          <>
-            <div className="kpi-grid">
-              {data.kpis.map((metric) => (
-                <KpiCard key={metric.id} metric={metric} />
-              ))}
-            </div>
-
-            <div className="panel-grid">
-              <section className="surface" aria-label="Issues by status">
-                <DataChart title="Issues by Status" data={data.issuesByStatus} type="column" />
-              </section>
-              <RecentActivity items={data.recentActivity} />
-            </div>
-          </>
+          <TeamGoalSummary summary={data} upskilling={upskillingData ?? null} defects={defectsData ?? null} overdue={overdueData ?? null} />
         ) : null}
       </StateView>
     </div>
