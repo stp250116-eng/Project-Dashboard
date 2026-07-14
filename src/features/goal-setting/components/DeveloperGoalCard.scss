@@ -180,3 +180,103 @@
     }
   }
 }
+
+/* ─── Dark-mode overrides for KendoReact Card component ─── */
+.dark-theme .developer-goal-card {
+  /* KendoReact Card renders its own white background; override it */
+  background-color: var(--color-surface) !important;
+  color: #ecf0f6 !important;
+  border-color: var(--color-border) !important;
+
+  /* Force ALL text inside the card to be bright in dark mode */
+  h3, h4, p, span, div, label {
+    color: inherit;
+  }
+}
+
+/* KendoReact uses .k-card as the main wrapper class */
+.dark-theme .k-card.developer-goal-card,
+.dark-theme .developer-goal-card.k-card {
+  background-color: var(--color-surface) !important;
+  color: #ecf0f6 !important;
+  border-color: var(--color-border) !important;
+}
+
+.dark-theme .developer-goal-card .k-card-header,
+.dark-theme .developer-goal-card .k-card-header * {
+  background-color: var(--color-surface) !important;
+  border-bottom-color: var(--color-border) !important;
+  color: #ecf0f6 !important;
+}
+
+.dark-theme .developer-goal-card .k-card-body,
+.dark-theme .developer-goal-card .k-card-body > div,
+.dark-theme .developer-goal-card .k-card-body h4,
+.dark-theme .developer-goal-card .k-card-body span,
+.dark-theme .developer-goal-card .k-card-body p {
+  color: #ecf0f6 !important;
+}
+
+.dark-theme .developer-goal-card .goals-section .goal-indicator {
+  background-color: rgba(255, 255, 255, 0.04);
+
+  &.status-on-track {
+    background-color: rgba(94, 232, 160, 0.08);
+  }
+
+  &.status-at-risk {
+    background-color: rgba(255, 201, 117, 0.08);
+  }
+
+  &.status-off-track {
+    background-color: rgba(255, 138, 128, 0.08);
+  }
+}
+
+/* KendoReact ProgressBar dark fix */
+.dark-theme .developer-goal-card .k-progressbar {
+  background-color: var(--color-border);
+}
+
+/* Ensure KendoReact Chip text stays white in dark mode */
+.dark-theme .developer-goal-card .k-chip {
+  color: #fff !important;
+}
+
+/* Per-card progress fill using --progress-fill set inline on a wrapper */
+.developer-goal-card .progress-wrap .k-progressbar {
+  background-color: var(--color-border) !important;
+}
+.developer-goal-card .progress-wrap .k-progressbar .k-selected,
+.developer-goal-card .progress-wrap .k-progressbar .k-progress {
+  background: var(--progress-fill) !important;
+}
+
+/* Rank badge adjustments for dark mode */
+.dark-theme .developer-goal-card .rank-badge--first {
+  background: linear-gradient(135deg, #f7d86b 0%, #f3c93e 100%) !important;
+  color: #1a1a1a !important;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.45) !important;
+}
+
+/* Ensure status span chips inside goal cells match the Chip colours */
+.developer-goal-card .goal-indicator .status-chip {
+  color: #fff !important;
+}
+.dark-theme .developer-goal-card .goal-indicator .status-chip {
+  color: #fff !important;
+}
+
+/* Score value colors should stay as-is (success/warning/error) — but override Kendo defaults */
+.dark-theme .developer-goal-card .k-progressbar .k-selected {
+  background-color: var(--color-primary) !important;
+}
+
+/* Goal type labels and values inside goal cells */
+.dark-theme .developer-goal-card [style*="grid"] > div {
+  color: #ecf0f6 !important;
+
+  span, div {
+    color: inherit !important;
+  }
+}

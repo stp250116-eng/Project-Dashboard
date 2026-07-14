@@ -52,10 +52,10 @@ export const GoalSettingToolbar: React.FC<GoalSettingToolbarProps> = ({
         gap: '24px',
         alignItems: 'flex-start',
         padding: '20px',
-        backgroundColor: 'var(--color-surface, #f5f5f5)',
+        backgroundColor: 'var(--color-surface)',
         borderRadius: '4px',
         marginBottom: '24px',
-        border: '1px solid var(--color-border, #e0e0e0)',
+        border: '1px solid var(--color-border)',
       }}
     >
       {/* Year Selector */}
@@ -67,7 +67,7 @@ export const GoalSettingToolbar: React.FC<GoalSettingToolbarProps> = ({
             fontSize: '12px',
             fontWeight: '600',
             marginBottom: '8px',
-            color: 'var(--color-text-secondary, #666)',
+            color: 'var(--color-text-secondary)',
             textTransform: 'uppercase',
             letterSpacing: '0.5px',
           }}
@@ -96,7 +96,7 @@ export const GoalSettingToolbar: React.FC<GoalSettingToolbarProps> = ({
             fontSize: '12px',
             fontWeight: '600',
             marginBottom: '8px',
-            color: 'var(--color-text-secondary, #666)',
+            color: 'var(--color-text-secondary)',
             textTransform: 'uppercase',
             letterSpacing: '0.5px',
           }}
@@ -113,10 +113,11 @@ export const GoalSettingToolbar: React.FC<GoalSettingToolbarProps> = ({
             width: '100%',
             padding: '8px 12px',
             fontSize: '14px',
-            border: '1px solid var(--color-border, #e0e0e0)',
+            border: '1px solid var(--color-border)',
             borderRadius: '4px',
-            backgroundColor: '#fff',
+            backgroundColor: 'var(--color-surface)',
             boxSizing: 'border-box',
+            color: 'var(--color-text)',
           }}
         />
       </div>
@@ -131,7 +132,7 @@ export const GoalSettingToolbar: React.FC<GoalSettingToolbarProps> = ({
             fontSize: '12px',
             fontWeight: '600',
             marginBottom: '8px',
-            color: 'var(--color-text-secondary, #666)',
+            color: 'var(--color-text-secondary)',
             textTransform: 'uppercase',
             letterSpacing: '0.5px',
           }}

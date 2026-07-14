@@ -27,14 +27,14 @@ export const GoalSettingCardGrid: React.FC<GoalSettingCardGridProps> = ({
         style={{
           padding: '24px',
           textAlign: 'center',
-          color: 'var(--color-error, #f44336)',
-          backgroundColor: 'var(--color-error-bg, #ffebee)',
+          color: 'var(--color-error)',
+          backgroundColor: 'var(--color-error-bg)',
           borderRadius: '4px',
           marginTop: '16px',
         }}
       >
         <p style={{ margin: '0', fontSize: '14px', fontWeight: '500' }}>Error loading goal data</p>
-        <p style={{ margin: '8px 0 0 0', fontSize: '12px', color: 'var(--color-text-secondary, #666)' }}>
+        <p style={{ margin: '8px 0 0 0', fontSize: '12px', color: 'var(--color-text-secondary)' }}>
           {error}
         </p>
       </div>
@@ -47,7 +47,7 @@ export const GoalSettingCardGrid: React.FC<GoalSettingCardGridProps> = ({
         style={{
           padding: '24px',
           textAlign: 'center',
-          color: 'var(--color-text-secondary, #666)',
+          color: 'var(--color-text-secondary)',
         }}
       >
         <p style={{ margin: '0', fontSize: '14px' }}>Loading developer goals...</p>
@@ -61,8 +61,8 @@ export const GoalSettingCardGrid: React.FC<GoalSettingCardGridProps> = ({
         style={{
           padding: '24px',
           textAlign: 'center',
-          color: 'var(--color-text-secondary, #666)',
-          backgroundColor: 'var(--color-surface, #f5f5f5)',
+          color: 'var(--color-text-secondary)',
+          backgroundColor: 'var(--color-surface)',
           borderRadius: '4px',
           marginTop: '16px',
         }}

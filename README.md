@@ -86,3 +86,28 @@ src/
 ## License
 
 Proprietary — internal use only.
+
+## Theme / Dark Mode
+
+The dashboard ships with a full **Light / Dark mode** toggle located in the header (top-right navbar).
+
+| Feature | Details |
+|---------|---------|
+| Toggle control | Sun/Moon icon button in the header navbar |
+| Persistence | `localStorage` key `theme` (`'light'` or `'dark'`) |
+| CSS mechanism | Adds/removes the `.dark-theme` class on the `<html>` element |
+| Variables file | `src/app/styles/global.css` |
+| Contrast | WCAG AA — light text (`#ecf0f6`) on dark background (`#121820`) |
+| Coverage | All app shell, KPI cards, surfaces, filters, KendoReact grids/inputs, scrollbars |
+| Transition | Smooth 300ms background/color transition on toggle |
+
+### How it works
+
+1. The `<Header>` component (`src/app/layouts/Header.tsx`) holds a `useState` hook initialised from `localStorage`.
+2. A `useEffect` applies or removes the `dark-theme` class on the document root whenever the state changes.
+3. CSS custom properties (variables) in `:root` define light defaults; `.dark-theme` overrides them.
+4. Additional dark-specific rules override hardcoded colours (active sidenav, error backgrounds, KendoReact widgets, page gradients).
+
+### Customising colours
+
+Edit the `.dark-theme { ... }` block in `src/app/styles/global.css`. All component styles reference `var(--color-*)` tokens, so a single change propagates everywhere.

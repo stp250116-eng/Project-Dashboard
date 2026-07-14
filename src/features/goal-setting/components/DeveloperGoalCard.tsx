@@ -14,6 +14,7 @@ import type { GoalType } from '../models/goalModels';
 import { LOW_DEFECT_TOOLTIP, HIGH_DEFECT_TOOLTIP, COMPLEXITY_TOOLTIP, OVERDUE_TOOLTIP } from '../constants/defectTooltips';
 import { formatTrainingDuration } from '@features/developer-training-dashboard/services/developerTrainingAnalytics';
 import type { DeveloperGoalData } from '../models/goalModels';
+import './DeveloperGoalCard.scss';
 
 interface DeveloperGoalCardProps {
   developer: DeveloperGoalData;
@@ -60,13 +61,13 @@ export const DeveloperGoalCard: React.FC<DeveloperGoalCardProps> = ({
       onClick={() => onSelectDeveloper?.(developer.developerId)}
       style={{ cursor: 'pointer', height: '100%' }}
     >
-      <CardHeader className="card-header" style={{ padding: '16px', borderBottom: '1px solid var(--color-border, #e0e0e0)' }}>
+      <CardHeader className="card-header" style={{ padding: '16px', borderBottom: '1px solid var(--color-border)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', width: '100%' }}>
           <div>
-            <h3 style={{ margin: '0 0 4px 0', fontSize: '16px', fontWeight: '600', color: 'var(--color-text-primary, #333)' }}>
+            <h3 style={{ margin: '0 0 4px 0', fontSize: '16px', fontWeight: '600', color: 'var(--color-text)' }}>
               {developer.name}
             </h3>
-            <p style={{ margin: '0', fontSize: '12px', color: 'var(--color-text-secondary, #666)' }}>
+            <p style={{ margin: '0', fontSize: '12px', color: 'var(--color-muted)' }}>
               {developer.role} • {developer.team}
             </p>
           </div>
@@ -89,9 +90,9 @@ export const DeveloperGoalCard: React.FC<DeveloperGoalCardProps> = ({
                     : developer.rank === 3
                       ? '#cd7f32'
                       : developer.rank === 0
-                        ? 'var(--color-surface, #f5f5f5)'
-                        : 'var(--color-surface, #f5f5f5)',
-              color: developer.rank > 0 && developer.rank <= 3 ? '#fff' : 'var(--color-text-primary, #333)',
+                        ? 'var(--color-surface)'
+                        : 'var(--color-surface)',
+              color: developer.rank > 0 && developer.rank <= 3 ? '#fff' : 'var(--color-text-primary)',
               boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
             }}
           >
@@ -111,7 +112,7 @@ export const DeveloperGoalCard: React.FC<DeveloperGoalCardProps> = ({
               marginBottom: '8px',
             }}
           >
-            <span style={{ fontSize: '12px', fontWeight: '600', color: 'var(--color-text-secondary, #666)' }}>
+            <span style={{ fontSize: '12px', fontWeight: '600', color: 'var(--color-text)' }}>
               Overall Score
             </span>
             <span
@@ -120,47 +121,60 @@ export const DeveloperGoalCard: React.FC<DeveloperGoalCardProps> = ({
                 fontWeight: 'bold',
                 color:
                   developer.overallScore >= 80
-                    ? 'var(--color-success, #4caf50)'
+                    ? 'var(--color-success)'
                     : developer.overallScore >= 60
-                      ? 'var(--color-warning, #ffa500)'
-                      : 'var(--color-error, #f44336)',
+                      ? 'var(--color-warning)'
+                      : 'var(--color-error)',
               }}
             >
               {developer.overallScore}/100
             </span>
           </div>
-          <ProgressBar
-            value={developer.overallScore}
-            max={100}
+          <div
+            className="progress-wrap"
             style={{
-              height: '15px',
-              backgroundColor: 'var(--color-surface, #f5f5f5)',
+              // CSS custom property used by CSS to colour the filled bar
+              ['--progress-fill' as any]:
+                developer.overallScore >= 80
+                  ? 'var(--color-success)'
+                  : developer.overallScore >= 60
+                  ? 'var(--color-warning)'
+                  : 'var(--color-error)',
             }}
-          />
+          >
+            <ProgressBar
+              className="developer-progress"
+              value={developer.overallScore}
+              max={100}
+              style={{
+                height: '15px',
+              }}
+            />
+          </div>
         </div>
 
         {/* Goal Status Summary */}
         <div style={{ marginBottom: '12px', display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
           {goalSummary['on-track'] > 0 && (
-            <Chip style={{ backgroundColor: 'var(--color-success, #4caf50)', color: '#fff' }}>
+            <Chip style={{ backgroundColor: 'var(--color-success)', color: '#fff' }}>
               {goalSummary['on-track']} On Track
             </Chip>
           )}
           {goalSummary['at-risk'] > 0 && (
-            <Chip style={{ backgroundColor: 'var(--color-warning, #ffa500)', color: '#fff' }}>
+            <Chip style={{ backgroundColor: 'var(--color-warning)', color: '#fff' }}>
               {goalSummary['at-risk']} At Risk
             </Chip>
           )}
           {goalSummary['off-track'] > 0 && (
-            <Chip style={{ backgroundColor: 'var(--color-error, #f44336)', color: '#fff' }}>
+            <Chip style={{ backgroundColor: 'var(--color-error)', color: '#fff' }}>
               {goalSummary['off-track']} Off Track
             </Chip>
           )}
         </div>
 
         {/* Individual Goals */}
-        <div style={{ borderTop: '1px solid var(--color-border, #e0e0e0)', paddingTop: '12px' }}>
-          <h4 style={{ margin: '0 0 8px 0', fontSize: '12px', fontWeight: '600', color: 'var(--color-text-secondary, #666)' }}>
+        <div style={{ borderTop: '1px solid var(--color-border)', paddingTop: '12px' }}>
+          <h4 style={{ margin: '0 0 8px 0', fontSize: '12px', fontWeight: '600', color: 'var(--color-text)' }}>
             Goal Details
           </h4>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
@@ -170,17 +184,17 @@ export const DeveloperGoalCard: React.FC<DeveloperGoalCardProps> = ({
                 style={{
                   padding: '8px',
                   borderRadius: '4px',
-                  backgroundColor: `var(--color-${getStatusClass(goal.status)}, #f5f5f5)`,
-                  border: `1px solid var(--color-border, #e0e0e0)`,
+                  backgroundColor: 'var(--color-surface)',
+                  border: '1px solid var(--color-border)',
                 }}
               >
-                <div style={{ fontSize: '11px', fontWeight: '600', marginBottom: '4px', color: 'var(--color-text-primary, #333)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <div style={{ fontSize: '11px', fontWeight: '600', marginBottom: '4px', color: 'var(--color-text)', display: 'flex', alignItems: 'center', gap: '6px' }}>
                           <span>{getGoalLabel(goal.type)}</span>
                   {(goal.type === 'defectLow') && (
                     <span
                       title={LOW_DEFECT_TOOLTIP}
                       aria-label="Low level defect rate details"
-                      style={{ fontSize: '11px', color: 'var(--color-text-secondary, #666)', cursor: 'help' }}
+                      style={{ fontSize: '11px', color: 'var(--color-text-secondary)', cursor: 'help' }}
                     >
                       ⓘ
                     </span>
@@ -189,7 +203,7 @@ export const DeveloperGoalCard: React.FC<DeveloperGoalCardProps> = ({
                     <span
                       title={HIGH_DEFECT_TOOLTIP}
                       aria-label="High level defect rate details"
-                      style={{ fontSize: '11px', color: 'var(--color-text-secondary, #666)', cursor: 'help' }}
+                      style={{ fontSize: '11px', color: 'var(--color-text-secondary)', cursor: 'help' }}
                     >
                       ⓘ
                     </span>
@@ -198,7 +212,7 @@ export const DeveloperGoalCard: React.FC<DeveloperGoalCardProps> = ({
                     <span
                       title={COMPLEXITY_TOOLTIP}
                       aria-label="Complexity points guidance"
-                      style={{ fontSize: '11px', color: 'var(--color-text-secondary, #666)', cursor: 'help' }}
+                      style={{ fontSize: '11px', color: 'var(--color-text-secondary)', cursor: 'help' }}
                     >
                       ⓘ
                     </span>
@@ -207,7 +221,7 @@ export const DeveloperGoalCard: React.FC<DeveloperGoalCardProps> = ({
                     <span
                       title={OVERDUE_TOOLTIP}
                       aria-label="Overdue ratio guidance"
-                      style={{ fontSize: '11px', color: 'var(--color-text-secondary, #666)', cursor: 'help' }}
+                      style={{ fontSize: '11px', color: 'var(--color-text-secondary)', cursor: 'help' }}
                     >
                       ⓘ
                     </span>
@@ -222,10 +236,10 @@ export const DeveloperGoalCard: React.FC<DeveloperGoalCardProps> = ({
                         borderRadius: '3px',
                         backgroundColor:
                           goal.status === 'on-track'
-                            ? 'var(--color-success, #4caf50)'
+                            ? 'var(--color-success)'
                             : goal.status === 'at-risk'
-                              ? 'var(--color-warning, #ffa500)'
-                              : 'var(--color-error, #f44336)',
+                              ? 'var(--color-warning)'
+                              : 'var(--color-error)',
                         color: '#fff',
                         fontWeight: '600',
                         textTransform: 'capitalize',
@@ -233,7 +247,7 @@ export const DeveloperGoalCard: React.FC<DeveloperGoalCardProps> = ({
                     >
                       {goal.status}
                     </span>
-                    <span style={{ fontSize: '12px', fontWeight: '600', color: 'var(--color-text-primary, #333)' }}>
+                    <span style={{ fontSize: '12px', fontWeight: '600', color: 'var(--color-text)' }}>
                       {(() => {
                         // Format display per goal type
                           if (goal.type === 'training') {
