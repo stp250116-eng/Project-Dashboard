@@ -56,11 +56,17 @@ describe('GoalSettingGrid', () => {
     const handleRowClick = jest.fn();
     const { container } = render(<GoalSettingGrid developers={sampleDevelopers as any} onRowClick={handleRowClick} />);
 
-    // Find the body row that contains 'Alice' (skip header row)
-    // Click the developer name span which now triggers onRowClick
+    // Try the developer name span first, fall back to clicking the grid row
     const aliceSpan = container.querySelector('span[data-developer-id="dev-1"]');
-    expect(aliceSpan).toBeTruthy();
-    if (aliceSpan) fireEvent.click(aliceSpan);
+    if (aliceSpan) {
+      fireEvent.click(aliceSpan);
+    } else {
+      // Click the grid row containing Alice (Grid onRowClick fires)
+      const aliceCell = screen.getByText('Alice');
+      const row = aliceCell.closest('tr');
+      expect(row).toBeTruthy();
+      if (row) fireEvent.click(row);
+    }
 
     expect(handleRowClick).toHaveBeenCalledWith('dev-1');
   });

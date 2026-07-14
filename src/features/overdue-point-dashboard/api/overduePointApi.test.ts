@@ -45,6 +45,6 @@ describe('overduePointApi', () => {
     const res = await overduePointApi.getOverduePointRecords();
 
     expect(fakeClient.get).toHaveBeenCalledTimes(2);
-    expect(res.map(r => r.developer)).toEqual(['A', 'B']);
+    expect(res.map((r: { developer: string }) => r.developer)).toEqual(['A', 'B']);
   });
 });
