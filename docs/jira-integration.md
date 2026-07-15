@@ -92,6 +92,22 @@ https://id.atlassian.com/manage-profile/security/api-tokens.
 
 See the root README "Jira configuration steps" section.
 
+### Notes for running tests locally
+
+Unit and component tests use MSW (Mock Service Worker) for HTTP-level
+request mocking. MSW is a devDependency — make sure you install dev
+dependencies before running tests. Recommended command:
+
+```bash
+npm ci
+```
+
+If your environment cannot install `msw`, the test suite may still run but
+network requests won't be intercepted. The repository provides a short-term
+fallback shim in `test/mocks/server.ts` that disables interception when MSW
+isn't available; this is a temporary measure to allow limited test execution
+in locked-down environments. Prefer installing `msw` for full test fidelity.
+
 ## Related Decision
 
 - [ADR-002 Jira Integration](decisions/ADR-002-jira-integration.md)

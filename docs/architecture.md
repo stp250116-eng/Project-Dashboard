@@ -27,7 +27,7 @@ External APIs (Internal API, Jira REST / MCP)
 ```
 src/
 ├── app/            # shell: layouts, providers, router, guards, styles
-├── features/       # feature modules (dashboard, jira-overview, …)
+├── features/       # feature modules (dashboard, defect-dashboard, complexity-point, developer-training-dashboard, goal-setting, overdue-point-dashboard, team-goal)
 ├── integrations/   # external system integrations (jira)
 ├── shared/         # api, components, hooks, services, constants, types, utils
 └── main.tsx        # entry point

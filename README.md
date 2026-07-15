@@ -23,6 +23,24 @@ npm run dev
 
 Open http://localhost:5173.
 
+## Developer prerequisites
+
+This repository expects Node >= 18.18.0 and standard npm install flows. To ensure deterministic installs and avoid missing devDependencies (MSW, Playwright, etc.), use:
+
+```bash
+# install exact versions from package-lock.json
+npm ci
+
+# if you don't have a lockfile yet
+npm install
+
+# then copy example env and run dev
+cp .env.example .env.local
+npm run dev
+```
+
+If tests fail locally with module-resolution errors for `msw`, run `npm ci` to restore devDependencies.
+
 ## Scripts
 
 | Script                  | Description                          |

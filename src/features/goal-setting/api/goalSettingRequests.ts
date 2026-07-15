@@ -17,6 +17,7 @@ import type { RawJiraIssue } from '@integrations/jira/jiraTypes';
 import { mapTrainingRecords } from '@features/developer-training-dashboard/services/developerTrainingMapper';
 // complexityAnalytics helpers intentionally omitted to avoid unused imports
 import { complexityApi } from '@features/complexity-point/api/complexityApi';
+import { LoggerService } from '@shared/services/logger';
 import { GOAL_DEFINITIONS } from '../services/goalDefinitions';
 import { calculateGoalStatus, calculateSubScore, rankDevelopers } from '../services/goalScoring';
 import type { DeveloperGoal, DeveloperGoalData, GoalType } from '../models/goalModels';
@@ -27,20 +28,20 @@ import type { DeveloperGoal, DeveloperGoalData, GoalType } from '../models/goalM
 // some mocks only provide a subset of jiraApi — fall back to a direct
 // client call so unit tests that mock `createApiClient` continue to work.
 const fetchAllJiraIssues = async <T = RawJiraIssue>(jql: string, fields: string[] = []): Promise<T[]> => {
-  if (typeof (jiraApi as any).fetchAllIssues === 'function') {
-    const fetchFn = (jiraApi as any).fetchAllIssues as <U = RawJiraIssue>(jql: string, fields?: string) => Promise<U[]>;
-    return fetchFn<T>(jql, fields.join(','));
+  // If the integration exports a helper to fetch all issues, prefer it.
+  const maybe = jiraApi as unknown as { fetchAllIssues?: (jql: string, fields?: string) => Promise<RawJiraIssue[]> };
+  if (typeof maybe.fetchAllIssues === 'function') {
+    const fetchFn = maybe.fetchAllIssues as (jql: string, fields?: string) => Promise<RawJiraIssue[]>;
+    const results = await fetchFn(jql, fields.join(','));
+    return results as unknown as T[];
   }
 
   const client = createApiClient(appConfig.jiraApiBase);
   try {
-    const resp = await Promise.resolve(client.get({
-      url: JIRA_ENDPOINTS.search,
+    const resp = await client.get<{ issues: T[] }>(JIRA_ENDPOINTS.search, {
       params: { jql, maxResults: JIRA_DEFAULT_MAX_RESULTS, fields: fields.join(',') },
-    } as any));
-    if (resp && typeof resp === 'object' && 'data' in resp) {
-      return (resp as any).data?.issues ?? [];
-    }
+    });
+    return resp?.data?.issues ?? [];
   } catch {
     // fall through to return empty list on error
   }
@@ -363,8 +364,7 @@ export async function fetchGoalSettingData(year: number): Promise<DeveloperGoalD
     // Sort by rank
     return rankDevelopers(developers);
   } catch (error) {
-    /* eslint-disable-next-line no-console */
-    console.error('Error fetching goal setting data:', error);
+    LoggerService.error('Error fetching goal setting data', { error });
     return [];
   }
 }

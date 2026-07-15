@@ -15,8 +15,11 @@ Notes:
 - Defect Dashboard — GET ALM DEFECT (id `11471`). See `src/features/defect-dashboard/README.md`
 - Developer Training Dashboard — [OO] - GET TRAINING INFORMATION (id `12947`). See `src/features/developer-training-dashboard/README.md`
 - Goal Setting — aggregates multiple filters (Training `12947`, Defects `11471`, Complexity `13492`, Overdue `13525`). See `src/features/goal-setting/README.md`
+ - Goal Setting — aggregates multiple filters (Training `12947`, Defects `11471`, Complexity `13492`, Overdue `13525`). See `src/features/goal-setting/README.md`
 - Overdue Point Dashboard — [OO] - GET OVER DUE ITEM (id `13525`). See `src/features/overdue-point-dashboard/README.md`
 - Complexity Point — GET COMPLEXITY BY YEAR (saved filter id referenced in feature). See `src/features/complexity-point/README.md`
+ - Complexity Point — GET COMPLEXITY BY YEAR (id `13492`). See `src/features/complexity-point/README.md`
+ - Participation Index — GET ALL DEVELOPER PARTICIPATE ISSUE SPECIFIC YEAR (id `13725`) referenced by participation/aggregation queries. See `src/features/team-goal/README.md`
 - Dashboard — executive summary (aggregates KPIs from other features). See `src/features/dashboard/README.md`
 
 ## How to update

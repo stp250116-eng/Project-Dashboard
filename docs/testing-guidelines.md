@@ -77,7 +77,7 @@ npm run e2e:ui
 ## Naming
 
 - Unit: `<Subject>.test.ts(x)`
-- E2E: `<area>.spec.ts` (e.g. `dashboard.spec.ts`, `jira-overview.spec.ts`)
+- E2E: `<area>.spec.ts` (e.g. `dashboard.spec.ts`, `defect-dashboard.spec.ts`)
 
 ## Definition of Done (testing)
 

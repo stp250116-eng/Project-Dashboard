@@ -150,3 +150,9 @@ All notable changes to this project are documented here. Format loosely follows
   `@progress/kendo-drawing`'s native `class Class`, which esbuild cannot
   reconcile. `vite.config.ts` now aliases both geometry packages to their
   internally-consistent CommonJS (`dist/npm/main.js`) builds.
+
+### Docs / Tests
+
+- Added `.env.example` and a short developer setup recommendation to `README.md`.
+- Added guidance to `docs/jira-integration.md` recommending `npm ci` before running tests and explained the temporary MSW fallback shim in `test/mocks/server.ts`.
+- Fixed coding-standard and typing issues in `src/features/goal-setting/api/goalSettingRequests.ts` and adjusted Jest setup (`test/helpers/setupTests.ts`) for static imports.

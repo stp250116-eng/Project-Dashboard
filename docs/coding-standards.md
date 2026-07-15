@@ -27,10 +27,12 @@
 
 ## Logging
 
-- Use `LoggerService` exclusively.
-- `console.log` / `console.error` are forbidden in committed code
-  (enforced by ESLint `no-console: error`). The single sanctioned exception is
-  inside `LoggerService` itself.
+- Use `LoggerService` exclusively for application logging.
+- Avoid `console.log` in committed code. ESLint is configured to disallow
+  `console.log` while allowing `console.warn` and `console.error` in
+  exceptional bootstrap or test environments; prefer `LoggerService` for
+  structured logs and central control. The single sanctioned logging
+  implementation location is `src/shared/services/logger/LoggerService.ts`.
 
 ## Imports
 
