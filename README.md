@@ -21,7 +21,7 @@ cp .env.example .env.local   # then edit values
 npm run dev
 ```
 
-Open http://localhost:5173.
+Open http://10.225.7.25:5689.
 
 ## Developer prerequisites
 

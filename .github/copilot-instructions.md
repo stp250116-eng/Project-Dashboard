@@ -262,13 +262,13 @@ Create and maintain:
 │   │   └── guards
 │   │
 │   ├── features
+│   │   ├── complexity-point
 │   │   ├── dashboard
-│   │   ├── jira-overview
-│   │   ├── sprint-board
-│   │   ├── release-dashboard
 │   │   ├── defect-dashboard
-│   │   ├── team-capacity
-│   │   └── reports
+│   │   ├── developer-training-dashboard
+│   │   ├── goal-setting
+│   │   ├── overdue-point-dashboard
+│   │   └── team-goal
 │   │
 │   ├── integrations
 │   │   └── jira

@@ -108,6 +108,19 @@ fallback shim in `test/mocks/server.ts` that disables interception when MSW
 isn't available; this is a temporary measure to allow limited test execution
 in locked-down environments. Prefer installing `msw` for full test fidelity.
 
+### Test tooling note
+
+Jest tests avoid using `import.meta.env` directly by aliasing the env module
+to a mock in tests. The module `@shared/config/env` is mapped to
+`test/mocks/env.ts` in `jest.config.cjs` so `appConfig` can be tested without
+Vite's `import.meta` semantics.
+
+See also: `docs/jira-filters.md` (index of saved filter IDs) and
+`src/integrations/jira/jiraConstants.ts` (single source of truth for filter
+IDs and endpoints). The code also defines a participation filter
+`JIRA_PARTICIPATION_FILTER` (id `13725`) used for participation/aggregation
+queries referenced by the `team-goal` feature.
+
 ## Related Decision
 
 - [ADR-002 Jira Integration](decisions/ADR-002-jira-integration.md)
