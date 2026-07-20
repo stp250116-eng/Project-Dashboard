@@ -1,4 +1,4 @@
-# Team Goal Feature
+# Team Goal Feature (Integration Test with Github and JIRA)
 
 ## Feature Purpose
 
