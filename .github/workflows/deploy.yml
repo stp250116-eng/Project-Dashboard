@@ -1,0 +1,23 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy-staging:
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy to Staging
+        run: echo "Deploying to staging environment"
+
+  deploy-production:
+    runs-on: ubuntu-latest
+    needs: deploy-staging
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy to Production
+        run: echo "Deploying to production environment"
